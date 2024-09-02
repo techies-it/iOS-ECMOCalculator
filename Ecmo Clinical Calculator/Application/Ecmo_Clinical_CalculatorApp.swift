@@ -11,7 +11,7 @@ import SwiftUI
 struct Ecmo_Clinical_CalculatorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreen()
         }
     }
 }

@@ -7,18 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		918998F42C856B79006ED47A /* CalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918998F32C856B79006ED47A /* CalculatorModel.swift */; };
+		918998F62C856C6E006ED47A /* CalculatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918998F52C856C6E006ED47A /* CalculatorController.swift */; };
 		919B8F6E2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F6D2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift */; };
 		919B8F702C64BFB600B7F3D8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F6F2C64BFB600B7F3D8 /* ContentView.swift */; };
 		919B8F722C64BFB900B7F3D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 919B8F712C64BFB900B7F3D8 /* Assets.xcassets */; };
 		919B8F752C64BFB900B7F3D8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 919B8F742C64BFB900B7F3D8 /* Preview Assets.xcassets */; };
+		919B8F7C2C64C69B00B7F3D8 /* CalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F7B2C64C69A00B7F3D8 /* CalculatorView.swift */; };
+		919B8F7E2C64C6B700B7F3D8 /* CannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F7D2C64C6B700B7F3D8 /* CannulaView.swift */; };
+		919B8F802C64C6C800B7F3D8 /* ContactUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F7F2C64C6C800B7F3D8 /* ContactUsView.swift */; };
+		919B8F822C64CC5100B7F3D8 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F812C64CC5100B7F3D8 /* SplashScreen.swift */; };
+		919B8F842C64D59B00B7F3D8 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F832C64D59B00B7F3D8 /* CustomTabView.swift */; };
+		919B8F862C6502D000B7F3D8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F852C6502D000B7F3D8 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		918998F32C856B79006ED47A /* CalculatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
+		918998F52C856C6E006ED47A /* CalculatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorController.swift; sourceTree = "<group>"; };
 		919B8F6A2C64BFB600B7F3D8 /* Ecmo Clinical Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ecmo Clinical Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		919B8F6D2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ecmo_Clinical_CalculatorApp.swift; sourceTree = "<group>"; };
 		919B8F6F2C64BFB600B7F3D8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		919B8F712C64BFB900B7F3D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		919B8F742C64BFB900B7F3D8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		919B8F7B2C64C69A00B7F3D8 /* CalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorView.swift; sourceTree = "<group>"; };
+		919B8F7D2C64C6B700B7F3D8 /* CannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannulaView.swift; sourceTree = "<group>"; };
+		919B8F7F2C64C6C800B7F3D8 /* ContactUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUsView.swift; sourceTree = "<group>"; };
+		919B8F812C64CC5100B7F3D8 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
+		919B8F832C64D59B00B7F3D8 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
+		919B8F852C6502D000B7F3D8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +48,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		918998F22C856B4F006ED47A /* Calculator */ = {
+			isa = PBXGroup;
+			children = (
+				918998F32C856B79006ED47A /* CalculatorModel.swift */,
+				919B8F7B2C64C69A00B7F3D8 /* CalculatorView.swift */,
+				918998F52C856C6E006ED47A /* CalculatorController.swift */,
+			);
+			path = Calculator;
+			sourceTree = "<group>";
+		};
+		918998F72C85749D006ED47A /* Cannula */ = {
+			isa = PBXGroup;
+			children = (
+				919B8F7D2C64C6B700B7F3D8 /* CannulaView.swift */,
+			);
+			path = Cannula;
+			sourceTree = "<group>";
+		};
+		918998F82C8574B0006ED47A /* ContactUs */ = {
+			isa = PBXGroup;
+			children = (
+				919B8F7F2C64C6C800B7F3D8 /* ContactUsView.swift */,
+			);
+			path = ContactUs;
+			sourceTree = "<group>";
+		};
+		918998F92C8574DD006ED47A /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				919B8F812C64CC5100B7F3D8 /* SplashScreen.swift */,
+				919B8F6F2C64BFB600B7F3D8 /* ContentView.swift */,
+				919B8F6D2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		918998FA2C85755D006ED47A /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				919B8F832C64D59B00B7F3D8 /* CustomTabView.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		918998FB2C857583006ED47A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				919B8F852C6502D000B7F3D8 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		919B8F612C64BFB600B7F3D8 = {
 			isa = PBXGroup;
 			children = (
@@ -51,8 +119,12 @@
 		919B8F6C2C64BFB600B7F3D8 /* Ecmo Clinical Calculator */ = {
 			isa = PBXGroup;
 			children = (
-				919B8F6D2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift */,
-				919B8F6F2C64BFB600B7F3D8 /* ContentView.swift */,
+				918998FB2C857583006ED47A /* Extensions */,
+				918998FA2C85755D006ED47A /* TabBar */,
+				918998F92C8574DD006ED47A /* Application */,
+				918998F82C8574B0006ED47A /* ContactUs */,
+				918998F72C85749D006ED47A /* Cannula */,
+				918998F22C856B4F006ED47A /* Calculator */,
 				919B8F712C64BFB900B7F3D8 /* Assets.xcassets */,
 				919B8F732C64BFB900B7F3D8 /* Preview Content */,
 			);
@@ -137,8 +209,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				919B8F822C64CC5100B7F3D8 /* SplashScreen.swift in Sources */,
 				919B8F702C64BFB600B7F3D8 /* ContentView.swift in Sources */,
+				919B8F802C64C6C800B7F3D8 /* ContactUsView.swift in Sources */,
+				919B8F862C6502D000B7F3D8 /* Extensions.swift in Sources */,
+				919B8F7E2C64C6B700B7F3D8 /* CannulaView.swift in Sources */,
+				919B8F7C2C64C69B00B7F3D8 /* CalculatorView.swift in Sources */,
+				918998F42C856B79006ED47A /* CalculatorModel.swift in Sources */,
+				918998F62C856C6E006ED47A /* CalculatorController.swift in Sources */,
 				919B8F6E2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift in Sources */,
+				919B8F842C64D59B00B7F3D8 /* CustomTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,7 +277,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -254,7 +334,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -269,17 +349,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Ecmo Clinical Calculator/Preview Content\"";
 				DEVELOPMENT_TEAM = HSSFDJ7Y26;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ECMO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -298,17 +383,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Ecmo Clinical Calculator/Preview Content\"";
 				DEVELOPMENT_TEAM = HSSFDJ7Y26;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ECMO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
