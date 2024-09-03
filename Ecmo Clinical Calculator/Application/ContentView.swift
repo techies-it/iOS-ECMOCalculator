@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedTab: tabName = .calculator
+    @State var selectedTab: tabName = .cannula
     @State private var isLandscape: Bool = false
     
     var body: some View {

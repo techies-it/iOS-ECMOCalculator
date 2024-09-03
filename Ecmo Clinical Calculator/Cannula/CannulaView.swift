@@ -18,117 +18,317 @@ struct CannulaView: View {
     @State private var isDropDownVisible: Bool = false
     @State private var isBloodFlowVisible: Bool = false
     @State private var isCIVisible: Bool = false
-    
+    @State private var isCannulaListVisible: Bool = false
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Cannula Selection")
-                .font(.largeTitle)
-                .padding(.top)
-            
-            HStack(spacing: 15) {
-                // Weight Input
-                TextField("Weight (kg)", text: $weight)
-                    .font(.system(size: 13))
-                    .keyboardType(.decimalPad)
-                    .foregroundStyle(.textFieldText)
-                    .padding(.horizontal, 15)
-                    .frame(height: 50)
-                    .background(RoundedRectangle(cornerRadius: 8)
-                        .stroke(weight.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
-                    .background(.textFieldBackground)
-                    .onChange(of: weight) { newValue in
-                        if let _ = newValue.firstIndex(of: "."),
-                           newValue.components(separatedBy: ".").count - 1 > 1 {
-                            weight = String(newValue.dropLast())
-                        }
-                        handleWeightChange(weight)
-                    }
-                
-                if isHeightVisible {
-                    // Height Input (Visible only if weight > 15)
-                    TextField("Height (cm)", text: $height)
-                        .font(.system(size: 13))
-                        .foregroundStyle(.textFieldText)
-                        .keyboardType(.decimalPad)
-                        .padding(.horizontal, 15)
-                        .frame(height: 50)
-                        .background(RoundedRectangle(cornerRadius: 8)
-                            .stroke(height.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
-                        .background(.textFieldBackground)
-                        .onChange(of: height) { newValue in
-                            if let _ = newValue.firstIndex(of: "."),
-                               newValue.components(separatedBy: ".").count - 1 > 1 {
-                                height = String(newValue.dropLast())
-                            }
-                            handleHeightChange(height)
-                        }
-                    
-                }
-                
-                if isDropDownVisible {
-                    // Blood Flow Dropdown
-
-                    Menu {
-                        if !isHeightVisible {
-                            ForEach(bloodFlowOptions, id: \.self) { option in
-                                Button("\(option) ml/kg/min") {
-                                    selectedBloodFlow = option
+        VStack(spacing: 0) {
+            ScrollView{
+                Text("Cannula Selection")
+                    .font(.largeTitle)
+                    .padding(.top)
+                    .padding(.bottom, 20)
+                VStack(spacing: 0) {
+                    GeometryReader { geometry in
+                    HStack(spacing: 5) {
+                        // Weight Input
+                        TextField("Weight (kg)", text: $weight)
+                            .font(.system(size: 13))
+                            .keyboardType(.decimalPad)
+                            .foregroundStyle(.textFieldText)
+                            .padding(.horizontal, 15)
+                            .frame(width: (geometry.size.width - 10) / 3, height: 50)         .background(RoundedRectangle(cornerRadius: 8)
+                                .stroke(weight.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
+                            .background(.textFieldBackground)
+                            .onChange(of: weight) { newValue in
+                                if let _ = newValue.firstIndex(of: "."),
+                                   newValue.components(separatedBy: ".").count - 1 > 1 {
+                                    weight = String(newValue.dropLast())
                                 }
+                                handleWeightChange(weight)
                             }
-                        }else{
-                            ForEach(CIFlowOptions, id: \.self) { option in
-                                Button("\(option) ml/kg/min") {
-                                    selectedCI = option
+                        
+                        if isHeightVisible {
+                            // Height Input (Visible only if weight > 15)
+                            TextField("Height (cm)", text: $height)
+                                .font(.system(size: 13))
+                                .foregroundStyle(.textFieldText)
+                                .keyboardType(.decimalPad)
+                                .padding(.horizontal, 15)
+                                .frame(width: (geometry.size.width - 10) / 3, height: 50) .background(RoundedRectangle(cornerRadius: 8)
+                                    .stroke(height.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
+                                .background(.textFieldBackground)
+                                .onChange(of: height) { newValue in
+                                    if let _ = newValue.firstIndex(of: "."),
+                                       newValue.components(separatedBy: ".").count - 1 > 1 {
+                                        height = String(newValue.dropLast())
+                                    }
+                                    handleHeightChange(height)
                                 }
-                            }
+                            
                         }
                         
-                    } label: {
-                        Text(selectedBloodFlow == nil ? "Select Blood Flow" : "\(selectedBloodFlow!) ml/kg/min")
-                            .font(.system(size: 11))
-                            .padding(.horizontal, 2)
-                            .frame(height: 50)
+                        if isDropDownVisible {
+                            // Blood Flow Dropdown
+                            
+                            Menu {
+                                if !isHeightVisible {
+                                    ForEach(bloodFlowOptions, id: \.self) { option in
+                                        Button("\(option)") {
+                                            selectedBloodFlow = option
+                                            isBloodFlowVisible = true
+                                            isCannulaListVisible = true
+                                        }
+                                    }
+                                }else{
+                                    ForEach(CIFlowOptions, id: \.self) { option in
+                                        Button("\(option) ml/kg/min") {
+                                            selectedCI = option
+                                            isCIVisible = true
+                                            isCannulaListVisible = true
+                                        }
+                                    }
+                                }
+                                
+                            } label: {
+                                if !isHeightVisible {
+                                    Text(selectedBloodFlow == nil ? "Select" : "\(selectedBloodFlow!)")
+                                        .font(.system(size: 11))
+                                        .padding(.horizontal, 2)
+                                        .frame(width: (geometry.size.width - 10) / 3, height: 40)                                      //                                        .background(RoundedRectangle(cornerRadius: 8)
+                                    //                                            .stroke(selectedBloodFlow == nil ? Color.gray : Color.blue, lineWidth: 1))
+                                }else{
+                                    Text(selectedCI == nil ? "Select" : "\(selectedCI!)")
+                                        .font(.system(size: 11))
+                                        .padding(.horizontal, 2)
+                                        .frame(width: (geometry.size.width - 10) / 3, height: 40)                                      //                                        .background(RoundedRectangle(cornerRadius: 8)
+                                    //                                            .stroke(selectedCI == nil ? Color.gray : Color.blue, lineWidth: 1))
+                                }
+                                Image(systemName: "chevron.down")
+                                
+                            }
+                            .frame(height: 40)
+                            //                            .frame(minWidth: (UIScreen.current?.bounds.width ?? 0) / 3)
+                            .menuStyle(.borderlessButton)
+                            .padding(6)
                             .background(RoundedRectangle(cornerRadius: 8)
-                                .stroke(selectedBloodFlow == nil ? Color.gray : Color.blue, lineWidth: 1))
+                                .stroke(selectedCI == nil ? Color.gray : Color.blue, lineWidth: 1))
+                        }
                     }
-                    .frame(height: 50)
-
+                    //                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            }
-            .padding(.horizontal, 10)
-            
-            if isBloodFlowVisible {
-                // Display Blood Flow Results
-                List(bloodFlowOptions, id: \.self) { option in
-                    Text("\(option) ml/kg/min : \(calculateFlowRate(for: option)) L/min")
-                        .foregroundColor(option == selectedBloodFlow ? Color.blue : Color.primary)
-                }
-                
-//                .frame(maxHeight: 200)
-                VStack(spacing: 10) {
-                    ForEach($bloodFlowOptions, id: \.self) { dose in
-//                        Text("\(dose) ml/kg/min : \(calculateFlowRate(for: option)) L/min")
-//                            .foregroundColor(.blue)
-//                            .frame(maxWidth: .infinity, alignment: .trailing)
-                        Divider()
+                    
+                    ResultText(result: "BSA 0.646 m2")
+                        .padding(.top, 10)
+                        .padding(.bottom, 10)
+                        .padding(.horizontal, 15)
+                    VStack {
+                        if isBloodFlowVisible {
+                            // Display Blood Flow Results
+                            VStack{
+                                Text("10Kg and Greater Target Blood Flow")
+                                    .foregroundStyle(.black)
+                                    .font(.subheadline).multilineTextAlignment(.leading)
+                                
+                            }
+                            .padding(.bottom, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            VStack(spacing: 0){
+                                
+                                ForEach(Array(bloodFlowOptions.enumerated()), id: \.element) { index, option in
+                                    Text("\(option) ml/kg/min : \(calculateFlowRate(for: option)) L/min")
+                                        .font(.caption)
+                                        .foregroundColor(option == selectedBloodFlow ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    if index < bloodFlowOptions.count - 1 {
+                                        Divider()
+                                    }
+                                }
+                                .padding(.vertical, 7)
+                                
+                            }.padding(.horizontal, 20)
+                                .background(.textFieldBackground)
+                            //                            .cornerRadius(10)
+                                .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+                                .transition(.opacity)
+                        }
+                        
+                        if isCIVisible {
+                            // Display Blood Flow Results
+                            VStack{
+                                Text("10Kg and Greater Target Blood Flow")
+                                    .foregroundStyle(.black)
+                                    .font(.subheadline).multilineTextAlignment(.leading)
+                                
+                            }
+                            .padding(.bottom, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 10)
+                            VStack(spacing: 0){
+                                
+                                ForEach(Array(CIFlowOptions.enumerated()), id: \.element) { index, option in
+                                    Text("\(String(format: "%.1f", option)) C.I. = \(calculateFlowRate(for: option)) L/min = \(calculateFlowRate(for: option)) ml/kg/min")
+                                        .font(.caption)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    if index < CIFlowOptions.count - 1 {
+                                        Divider()
+                                    }
+                                }
+                                .padding(.vertical, 7)
+                                
+                            }.padding(.horizontal, 30)
+                                .background(.textFieldBackground)
+                                .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+                                .transition(.opacity)
+                        }
+                        
                     }
+                    if isCannulaListVisible {
+                        // VA Neck Group
+                        Group {
+                        VStack{
+                            Text("VA Neck")
+                                .foregroundStyle(.tealBlue)
+                                .font(.headline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                            Text("Calculated at: ≤ 100mmHg Pressure Drop")
+                                .foregroundStyle(.red)
+                                .font(.subheadline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                        }
+                        
+                        .padding(.top, 25)
+                        .padding(.bottom, 10)
+                        
+                        VStack(spacing: 0){
+                            
+                            ForEach(Array(CIFlowOptions.enumerated()), id: \.element) { index, option in
+                                HStack(spacing: 5){
+                                    Text("\(String(format: "%.1f", option)) C.I. = \(calculateFlowRate(for: option)) L/min = \(calculateFlowRate(for: option)) ml/kg/min")
+                                        .font(.caption).multilineTextAlignment(.leading)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text("Arterial 15Fr")
+                                        .font(.caption).multilineTextAlignment(.trailing)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                }
+                                
+                                if index < CIFlowOptions.count - 1 {
+                                    Divider()
+                                }
+                            }
+                            .padding(.vertical, 7)
+                            
+                        }.padding(.horizontal, 30)
+                            .background(.textFieldBackground)
+                            .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+                            .transition(.opacity)
+                        
+                    }
+                    
+                    //VA Groin Group
+                    Group {
+                        VStack{
+                            Text("VA Groin")
+                                .foregroundStyle(.tealBlue)
+                                .font(.headline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                            Text("Calculated at: ≤ 100mmHg Pressure Drop")
+                                .foregroundStyle(.red)
+                                .font(.subheadline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                        }
+                        
+                        .padding(.top, 25)
+                        .padding(.bottom, 10)
+                        
+                        VStack(spacing: 0){
+                            
+                            ForEach(Array(CIFlowOptions.enumerated()), id: \.element) { index, option in
+                                HStack(spacing: 5){
+                                    Text("\(String(format: "%.1f", option)) C.I. = \(calculateFlowRate(for: option)) L/min = \(calculateFlowRate(for: option)) ml/kg/min")
+                                        .font(.caption).multilineTextAlignment(.leading)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text("Arterial 15Fr")
+                                        .font(.caption).multilineTextAlignment(.trailing)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                }
+                                
+                                if index < CIFlowOptions.count - 1 {
+                                    Divider()
+                                }
+                            }
+                            .padding(.vertical, 7)
+                            
+                        }.padding(.horizontal, 30)
+                            .background(.textFieldBackground)
+                            .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+                            .transition(.opacity)
+                        
+                    }
+                    //VVDL Group
+                    Group {
+                        VStack{
+                            Text("VVDL")
+                                .foregroundStyle(.tealBlue)
+                                .font(.headline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                            Text("Calculated at: ≤ 100mmHg Pressure Drop")
+                                .foregroundStyle(.red)
+                                .font(.subheadline).multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 10)
+                        }
+                        
+                        .padding(.top, 25)
+                        .padding(.bottom, 10)
+                        
+                        VStack(spacing: 0){
+                            
+                            ForEach(Array(CIFlowOptions.enumerated()), id: \.element) { index, option in
+                                HStack(spacing: 5){
+                                    Text("\(String(format: "%.1f", option)) C.I. = \(calculateFlowRate(for: option)) L/min = \(calculateFlowRate(for: option)) ml/kg/min")
+                                        .font(.caption).multilineTextAlignment(.leading)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text("Arterial 15Fr")
+                                        .font(.caption).multilineTextAlignment(.trailing)
+                                        .foregroundColor(option == selectedCI ? .tealBlue : .textFieldText)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                }
+                                
+                                if index < CIFlowOptions.count - 1 {
+                                    Divider()
+                                }
+                            }
+                            .padding(.vertical, 7)
+                            
+                        }.padding(.horizontal, 30)
+                            .background(.textFieldBackground)
+                            .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
+                            .transition(.opacity)
+                        
+                    }
+                    Spacer()
                 }
-                .padding()
-                .background(.textFieldBackground)
-                .cornerRadius(10)
-                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-                .transition(.opacity)
-
+                }
             }
             
-            if isCIVisible {
-                // Display Cardiac Index (CI) Results
-                List(calculateCIOptions(), id: \.self) { option in
-                    Text("\(String(format: "%.1f", option)) C.I. = \(calculateFlowRate(for: option)) L/min = \(calculateFlowRate(for: option)) ml/kg/min")
-                        .foregroundColor(option == selectedCI ? Color.blue : Color.primary)
-                }
-//                .frame(maxHeight: 300)
-            }
+            
             
         }
         .padding()
@@ -139,27 +339,27 @@ struct CannulaView: View {
             isHeightVisible = false
             isBloodFlowVisible = false
             isCIVisible = false
+            isCannulaListVisible = false
             return
         }
         
         if weightValue <= 15 {
             isHeightVisible = false
             isDropDownVisible = true
-            isBloodFlowVisible = true
+            //            isBloodFlowVisible = true
             isCIVisible = false
             selectedBloodFlow = nil
         } else {
             isHeightVisible = true
             isDropDownVisible = true
             isBloodFlowVisible = false
-            isCIVisible = true
             selectedCI = nil
         }
     }
     
-//    private func handleHeightChange(_ newValue: String) {
-//        // Logic to handle height change, if required
-//    }
+    //    private func handleHeightChange(_ newValue: String) {
+    //        // Logic to handle height change, if required
+    //    }
     
     private func calculateFlowRate(for option: Int) -> String {
         // Implement the logic to calculate the flow rate based on the selected blood flow
@@ -193,11 +393,11 @@ struct BloodFlowtList: View {
     var body: some View {
         VStack(spacing: 10) {
             ForEach(values, id: \.self) { dose in
-
-//                Text(dose)
-//                    .foregroundColor(.blue)
-//                    .frame(maxWidth: .infinity, alignment: .trailing)
-//                Divider()
+                
+                //                Text(dose)
+                //                    .foregroundColor(.blue)
+                //                    .frame(maxWidth: .infinity, alignment: .trailing)
+                //                Divider()
             }
         }
         .padding()
