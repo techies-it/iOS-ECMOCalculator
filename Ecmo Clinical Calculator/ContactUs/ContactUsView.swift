@@ -26,7 +26,8 @@ struct WebView: UIViewRepresentable {
 struct ContactUsView: View {
     @State private var isLandscape: Bool = false
     @State private var selectedURL: URL?
-    
+    @State private var showWebView = false
+
     var body: some View {
         GeometryReader { geometry in
             // Check if the device is in landscape mode
@@ -89,13 +90,16 @@ struct ContactUsView: View {
             Spacer()
             VStack(spacing: 10) {
                 ContactOptionView(icon: "ic_website", text: "Website") {
-                    selectedURL = URL(string: "https://www.example.com")
+                    selectedURL = URL(string: "https://www.google.com")
+                    showWebView = true
                 }
                 ContactOptionView(icon: "ic_education", text: "Education") {
-                    selectedURL = URL(string: "https://www.example.edu")
+                    selectedURL = URL(string: "https://www.google.com")
+                    showWebView = true
                 }
                 ContactOptionView(icon: "ic_contact", text: "Contact") {
-                    selectedURL = URL(string: "https://www.example.com/contact")
+                    selectedURL = URL(string: "https://www.google.com")
+                    showWebView = true
                 }
             }
             .padding(.horizontal, isLandscape ? 40 : 20) // Adjust padding based on orientation
@@ -103,6 +107,11 @@ struct ContactUsView: View {
             .background(Color.tealBlue)
             .cornerRadius(15, corners: [.topLeft, .topRight])
             .frame(maxWidth: .infinity, alignment: .bottom)
+        }
+        .sheet(isPresented: $showWebView) {
+                    if let url = selectedURL {
+                        WebView(url: url)
+                    }
         }
     }
     

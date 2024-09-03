@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		91743D072C85AC7000E040B2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91743D062C85AC7000E040B2 /* WebView.swift */; };
 		918998F42C856B79006ED47A /* CalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918998F32C856B79006ED47A /* CalculatorModel.swift */; };
 		918998F62C856C6E006ED47A /* CalculatorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918998F52C856C6E006ED47A /* CalculatorController.swift */; };
 		919B8F6E2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919B8F6D2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		91743D062C85AC7000E040B2 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		918998F32C856B79006ED47A /* CalculatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
 		918998F52C856C6E006ED47A /* CalculatorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorController.swift; sourceTree = "<group>"; };
 		919B8F6A2C64BFB600B7F3D8 /* Ecmo Clinical Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ecmo Clinical Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				919B8F7F2C64C6C800B7F3D8 /* ContactUsView.swift */,
+				91743D062C85AC7000E040B2 /* WebView.swift */,
 			);
 			path = ContactUs;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				918998F62C856C6E006ED47A /* CalculatorController.swift in Sources */,
 				919B8F6E2C64BFB600B7F3D8 /* Ecmo_Clinical_CalculatorApp.swift in Sources */,
 				919B8F842C64D59B00B7F3D8 /* CustomTabView.swift in Sources */,
+				91743D072C85AC7000E040B2 /* WebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

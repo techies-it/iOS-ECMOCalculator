@@ -20,23 +20,26 @@ struct CalculatorView: View {
                     .padding(.bottom, 10)
                 ScrollView {
                     VStack(spacing: 5) {
-                        ListItemView(titleLabel: "Pounds to Kilogram", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Pounds to Kilogram", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputLbs, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.centimetersInput) { _ in
-                                model.calculateCentimetersToInches()
+                            .onChange(of: model.weightInputLbs) { _ in
+                                model.calculatePoundsToKg()
                             }
-                        ResultText(result: model.centimetersToInchesResult)
+                        ResultText(result: model.poundsToKgResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Kilogram to Pounds", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInput, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Kilogram to Pounds", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputKg, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
-                        ResultText(result: "70.5")
+                            .onChange(of: model.weightInputKg) { _ in
+                                model.calculateKgToPounds()
+                            }
+                        ResultText(result: model.kgToPoundsResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Inches To Centimetres", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInput, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "weight", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 20)
-                            .onChange(of: model.weightInput) { _ in
+                            .onChange(of: model.weightInputHLD) { _ in
                                 model.calculateHeparinLoadingDose()
                             }
                         if model.showHeparinList {
@@ -47,14 +50,14 @@ struct CalculatorView: View {
                             }
                         }
                         
-                        ListItemView(titleLabel: "Centimetres To Inches", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.blank, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Centimetres To Inches", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
-                        ResultText(result: "70.5")
+                        ResultText(result: model.centimetersToInchesResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Body Surface Area", subTitleLabel: "Height", subTitleLabel2: "weight", subTitleLabel3: "weight", placeHolderlabel: "cm", placeHolderlabel2: "kg", placeHolderlabel3: "kg", textValue: $model.fio2Input, textValue2: $model.mapInput, textValue3: $model.pao2Input, numberOfField: 3)
+                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO2", subTitleLabel3: "PaO2", placeHolderlabel: "cmH2O", placeHolderlabel2: "%", placeHolderlabel3: "PaO2", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.pao2Input) { _ in
+                            .onChange(of: model.pao2InputOI) { _ in
                                 model.calculateOxygenIndex()
                             }
                         ResultText(result: model.oxygenIndexResult)
@@ -204,115 +207,213 @@ struct CalculatorView: View {
 //    }
 //}
 // Functions
-private func poundsToKilograms(pounds : Float) -> String{
+func calPoundsToKilograms(pounds : Float) -> String{
     let kilograms = pounds/2.2
-    return " \(round(kilograms * 100)/100.0) + Kg "
+    return " \(round(kilograms * 100)/100.0) Kg "
+}
+func calKilogramsToPounds(kilograms : Float) -> String{
+    let pounds = kilograms * 2.2
+    return " \(round(pounds * 100)/100.0) lbs "
+}
+func calInchesToCm(inches: Float) -> String{
+    let cmValue = inches * 2.54
+    return "\(round(cmValue * 100)/100.0) cm"
+}
+func calCmToInches(cms: Float) -> String{
+    let inchValue = cms/2.54
+    return "\(round(inchValue * 100)/100.0) in"
 }
 
-func calCentimetersToInches(centimeters: Float) -> String {
-    let resultInches = centimeters / 2.54
-    return String(format: "%.2f In", resultInches)
-}
-
-func calBodySurfaceArea(weight: Double, height: Double) -> String {
-    let heightPower = pow(height, 0.725)
+func calBodySurfaceArea(weight: Float, height: Float) -> String{
     let weightPower = pow(weight, 0.425)
-    let resultBSA = 0.007184 * heightPower * weightPower
-    return String(format: "%.2f m²", resultBSA)
+    let heightPower = pow(height, 0.725)
+    let bsa = 0.007184 * weightPower * heightPower
+    return "\(round(bsa * 100)/100.0) m\u{00B2}"
 }
 
-func calWeightBasedBodySurfaceArea(weight: Double) -> String {
-    let resultBSA = ((weight * 4) + 7) / (90 + weight)
-    return String(format: "%.2f m²", resultBSA)
+func calWeightBsa(weight: Float)-> String{
+    let calculatedWeightBSA = ((weight * 4) + 7) / (90 + weight)
+    return "\(round(calculatedWeightBSA * 100)/100.0)  m\u{00B2}"
 }
 
-func calOxygenIndex(fio2: Double, map: Double, pao2: Double) -> String {
-    let resultOxygenIndex = (fio2 * map / pao2) * 100
-    return String(format: "%.2f %%", resultOxygenIndex)
+func calOxygenIndex(mapValue: Float, fio2: Float, pao2: Float) -> String{
+    
+    let oxygenIndexValue =  ((mapValue * (fio2 / 100)) / pao2) * 100
+    return "\(round(oxygenIndexValue*10)/10.0)"
 }
 
-func calPaO2ByFiO2Ratio(fio2: Double, map: Double, pao2: Double) -> String {
-    let resultPaO2ByFiO2Ratio = (fio2 * map / pao2) * 100
-    return String(format: "%.0f", resultPaO2ByFiO2Ratio)
+func calPao2fio2Ratio(pao2: Float, fio2: Float) -> String{
+    let ratio = (pao2 / (fio2 / 100))
+    return "\(String(format: "%.0f", ratio))"
 }
 
-func calHeparinLoadingDose(weight: Double) -> [String] {
-    var result = [""]
-//    let dosages = [25, 50, 75, 100, 200, 300, 400]
-//    for dosage in dosages {
-//        let dose = Double(dosage) * weight
-//        result += "\(dosage)u/Kg = \(String(format: "%.1f", dose)) units\n"
-//    }
-            let doses = [25, 50, 100, 200, 300, 400]
-            return doses.map { "\($0)u/Kg = \($0 * Int(weight)) units" }
-    return result
-}
-
-func calCardiacIndexCalculator(BSA: Double) -> String {
-    var result = ""
-    let cardiacIndexes = [1.0, 1.5, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
-    for index in cardiacIndexes {
-        let ci = index * BSA
-        result += "CI \(index) = \(String(format: "%.2f", ci)) L/min\n"
+func calHeparingLoadingDose(weight: Float) -> [String]{
+    let loadingDoseArray: [Int] = [25,50,75,100,200,300,400]
+    var doseArray: [String] = []
+    var doseArrayValue = 0
+    
+    for number in loadingDoseArray{
+        doseArrayValue = number * Int(weight)
+        doseArray.append("\(number)u/Kg = \(doseArrayValue) units")
     }
-    return result
+    return doseArray
 }
 
-func calEstimatedRedCellMass(weight: Double, hematocrit: Double) -> String {
-    let resultERCM = weight * hematocrit
-    return "\(Int(round(resultERCM)))"
+func calCardiacIndexCalculator(bsa: Float) -> [String]{
+    let ciArray = [1.0,1.5,1.8,2.0,2.2,2.4,2.6,2.8,3.0]
+    
+    var resultCIArray : [String] = []
+    var calculatedValue = 0.00
+    
+    for number in ciArray{
+        calculatedValue = number * Double(bsa)
+        resultCIArray.append("CI \(number) = \(String(format: "%.2f", calculatedValue)) L/min")
+    }
+    return resultCIArray
 }
+func calEstimatedRedCellMass(weight: Float, hematocrit: Float) -> String {
+    let resultERCM = (weight * 75 * (hematocrit / 100))
+    return "\(String(format: "%.2f", resultERCM)) mL"
+}
+func calDilutionalHematocrit(weight: Float, hct: Float, circuitVol: Float) -> String{
+    let resultDilHematocrit = (((weight * 75) * (hct / 100)) / (circuitVol + (weight * 75))) * 100
+    return "\(String(format: "%.1f", resultDilHematocrit)) %"
+}
+func calCardiacOutput(heartRate: Float, strokeVol: Float) -> String{
+    let resultCardiacOutput = (heartRate * strokeVol) / 1000.0
+    return "\(String(format: "%.2f", resultCardiacOutput)) L/min"
+}
+func calCardiacIndex(cardiacOutput: Float, bsa: Float) -> String{
+    let resultCardiacIndex = cardiacOutput/bsa
+    return "\(String(format: "%.1f", resultCardiacIndex)) L/min/m\u{00B2}"
+}
+func calSystemicVascularResistance(mapValue: Float, cvp: Float, cardiacOutput: Float)-> String{
+    let vascularResistance = ((mapValue - cvp)/cardiacOutput) * 80
+    return "\(String(format: "%.0f", vascularResistance)) Dynes-sec/cm\u{2075}"
+}
+func calPulmonaryVascularResistance(mpap: Float, pcwp: Float, cardiacOutput: Float) -> String{
+    let vascularResistance = ((mpap - pcwp) / cardiacOutput) * 80
+    return "\(String(format: "%.0f", vascularResistance)) Dynes-sec/cm\u{2075}"
+}
+func calOxygenContentArterial(hgb: Float, svo2: Float, pao2: Float) -> String{
+    let resultArterialOC = (hgb * 1.34 * (svo2 / 100)) + (pao2 * 0.003)
+    return "\(String(format: "%.0f", resultArterialOC)) mL/dL"
+}
+func calOxygenDelivery(co: Float, cao2: Float) -> String{
+    let resultDo2 = (co * cao2) * 10
+    return "\(String(format: "%.0f", resultDo2)) mL/min"
+}
+func calOxygenContentVenous(hgb: Float, svo2: Float, pvo2: Float)-> String{
+    let resultContent = (hgb * 1.34 * (svo2 / 100)) + (pvo2 * 0.003)
+    return "\(String(format: "%.2f", resultContent)) mL/dL"
+}
+func calOxygenConsumption(co: Float, cao2cvo2: Float) -> String{
+    let oxygenConsumption = (co * cao2cvo2) * 10
+    return "\(String(format: "%.0f", oxygenConsumption)) mL/min"
+}
+func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> String{
+    let sweepGas = (currentPaco2 * sweepFlow) / desiredPaco2
+    return "\(String(format: "%.1f", sweepGas)) L/min"
+}
+//func calBodySurfaceArea(weight: Double, height: Double) -> String {
+//    let heightPower = pow(height, 0.725)
+//    let weightPower = pow(weight, 0.425)
+//    let resultBSA = 0.007184 * heightPower * weightPower
+//    return String(format: "%.2f m²", resultBSA)
+//}
 
-func calDilutionalHCT(weight: Double, hematocrit: Double, eclsCircuit: Double) -> String {
-    let totalHCT = weight + eclsCircuit
-    let resultHCT = hematocrit / totalHCT
-    return String(format: "%.2f %%", resultHCT * 100)
-}
-
-func calCardiacOutput(heartRate: Double, strokeVolume: Double) -> String {
-    let resultCardiacOutput = (heartRate * strokeVolume) / 1000
-    return String(format: "%.2f", resultCardiacOutput)
-}
-
-func calCardiacIndex(cardiacOutput: Double, bsa: Double) -> String {
-    let resultCardiacIndex = cardiacOutput / bsa
-    return String(format: "%.2f", resultCardiacIndex)
-}
-
-func calSystemicVascularResistance(map: Double, cvp: Double, co: Double) -> String {
-    let resultSVR = 80 * (map - cvp) / co
-    return String(format: "%.2f", resultSVR)
-}
-
-func calPulmonaryVascularResistance(mpap: Double, pcwp: Double, co: Double) -> String {
-    let resultPVR = 80 * (mpap - pcwp) / co
-    return String(format: "%.2f", resultPVR)
-}
-
-func calOxygenContentArterial(hemoglobin: Double, arterialOxygenSaturation: Double, partialPressureOfOxygen: Double) -> String {
-    let result = 1.34 * hemoglobin * arterialOxygenSaturation / 100 + 0.0031 * partialPressureOfOxygen
-    return String(format: "%.2f", result)
-}
-
-func calOxygenDelivery(cardiacOutput: Double, oxygenContentArterial: Double) -> String {
-    let result = cardiacOutput * oxygenContentArterial * 10
-    return String(format: "%.2f", result)
-}
-
-func calOxygenContentVenous(hemoglobin: Double, venousOxygenSaturation: Double, partialPressureOfOxygen: Double) -> String {
-    let result = 1.34 * hemoglobin * venousOxygenSaturation / 100 + 0.0031 * partialPressureOfOxygen
-    return String(format: "%.2f", result)
-}
-
-func calOxygenConsumption(cardiacOutput: Double, oxygenContentArterial: Double, oxygenContentVenous: Double) -> String {
-    let result = cardiacOutput * (oxygenContentArterial - oxygenContentVenous) * 10
-    return String(format: "%.2f", result)
-}
-
-func calSweepGas(currentPatientArterial: Double, currentSweepGasFlowRate: Double, desiredPatientArterial: Double) -> String {
-    let result = currentSweepGasFlowRate * (desiredPatientArterial / currentPatientArterial)
-    return String(format: "%.2f", result)
-}
+//func calWeightBasedBodySurfaceArea(weight: Double) -> String {
+//    let resultBSA = ((weight * 4) + 7) / (90 + weight)
+//    return String(format: "%.2f m²", resultBSA)
+//}
+//
+//func calOxygenIndex(fio2: Double, map: Double, pao2: Double) -> String {
+//    let resultOxygenIndex = (fio2 * map / pao2) * 100
+//    return String(format: "%.2f %%", resultOxygenIndex)
+//}
+//
+//func calPaO2ByFiO2Ratio(fio2: Double, map: Double, pao2: Double) -> String {
+//    let resultPaO2ByFiO2Ratio = (fio2 * map / pao2) * 100
+//    return String(format: "%.0f", resultPaO2ByFiO2Ratio)
+//}
+//
+//func calHeparinLoadingDose(weight: Double) -> [String] {
+//    var result = [""]
+////    let dosages = [25, 50, 75, 100, 200, 300, 400]
+////    for dosage in dosages {
+////        let dose = Double(dosage) * weight
+////        result += "\(dosage)u/Kg = \(String(format: "%.1f", dose)) units\n"
+////    }
+//            let doses = [25, 50, 100, 200, 300, 400]
+//            return doses.map { "\($0)u/Kg = \($0 * Int(weight)) units" }
+//    return result
+//}
+//
+//func calCardiacIndexCalculator(BSA: Double) -> String {
+//    var result = ""
+//    let cardiacIndexes = [1.0, 1.5, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
+//    for index in cardiacIndexes {
+//        let ci = index * BSA
+//        result += "CI \(index) = \(String(format: "%.2f", ci)) L/min\n"
+//    }
+//    return result
+//}
+//
+//func calEstimatedRedCellMass(weight: Double, hematocrit: Double) -> String {
+//    let resultERCM = weight * hematocrit
+//    return "\(Int(round(resultERCM)))"
+//}
+//
+//func calDilutionalHCT(weight: Double, hematocrit: Double, eclsCircuit: Double) -> String {
+//    let totalHCT = weight + eclsCircuit
+//    let resultHCT = hematocrit / totalHCT
+//    return String(format: "%.2f %%", resultHCT * 100)
+//}
+//
+//func calCardiacOutput(heartRate: Double, strokeVolume: Double) -> String {
+//    let resultCardiacOutput = (heartRate * strokeVolume) / 1000
+//    return String(format: "%.2f", resultCardiacOutput)
+//}
+//
+//func calCardiacIndex(cardiacOutput: Double, bsa: Double) -> String {
+//    let resultCardiacIndex = cardiacOutput / bsa
+//    return String(format: "%.2f", resultCardiacIndex)
+//}
+//
+//func calSystemicVascularResistance(map: Double, cvp: Double, co: Double) -> String {
+//    let resultSVR = 80 * (map - cvp) / co
+//    return String(format: "%.2f", resultSVR)
+//}
+//
+//func calPulmonaryVascularResistance(mpap: Double, pcwp: Double, co: Double) -> String {
+//    let resultPVR = 80 * (mpap - pcwp) / co
+//    return String(format: "%.2f", resultPVR)
+//}
+//
+//func calOxygenContentArterial(hemoglobin: Double, arterialOxygenSaturation: Double, partialPressureOfOxygen: Double) -> String {
+//    let result = 1.34 * hemoglobin * arterialOxygenSaturation / 100 + 0.0031 * partialPressureOfOxygen
+//    return String(format: "%.2f", result)
+//}
+//
+//func calOxygenDelivery(cardiacOutput: Double, oxygenContentArterial: Double) -> String {
+//    let result = cardiacOutput * oxygenContentArterial * 10
+//    return String(format: "%.2f", result)
+//}
+//
+//func calOxygenContentVenous(hemoglobin: Double, venousOxygenSaturation: Double, partialPressureOfOxygen: Double) -> String {
+//    let result = 1.34 * hemoglobin * venousOxygenSaturation / 100 + 0.0031 * partialPressureOfOxygen
+//    return String(format: "%.2f", result)
+//}
+//
+//func calOxygenConsumption(cardiacOutput: Double, oxygenContentArterial: Double, oxygenContentVenous: Double) -> String {
+//    let result = cardiacOutput * (oxygenContentArterial - oxygenContentVenous) * 10
+//    return String(format: "%.2f", result)
+//}
+//
+//func calSweepGas(currentPatientArterial: Double, currentSweepGasFlowRate: Double, desiredPatientArterial: Double) -> String {
+//    let result = currentSweepGasFlowRate * (desiredPatientArterial / currentPatientArterial)
+//    return String(format: "%.2f", result)
+//}
 
 
 //struct CalculatorViewOne: View {
