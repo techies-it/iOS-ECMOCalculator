@@ -90,15 +90,15 @@ struct ContactUsView: View {
             Spacer()
             VStack(spacing: 10) {
                 ContactOptionView(icon: "ic_website", text: "Website") {
-                    selectedURL = URL(string: "https://www.google.com")
+                    selectedURL = URL(string: "https://innovativeecmo.com/")
                     showWebView = true
                 }
                 ContactOptionView(icon: "ic_education", text: "Education") {
-                    selectedURL = URL(string: "https://www.google.com")
+                    selectedURL = URL(string: "https://innovativeecmo.com/ecmo-education/")
                     showWebView = true
                 }
                 ContactOptionView(icon: "ic_contact", text: "Contact") {
-                    selectedURL = URL(string: "https://www.google.com")
+                    selectedURL = URL(string: "https://innovativeecmo.com/contact/")
                     showWebView = true
                 }
             }
