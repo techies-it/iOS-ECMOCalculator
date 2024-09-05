@@ -36,7 +36,62 @@ struct CalculatorView: View {
                         ResultText(result: model.kgToPoundsResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "weight", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Inches to Centimeters", subTitleLabel: "in", placeHolderlabel: "in", textValue: $model.inchesInput, textValue2: $model.blank, textValue3: $model.blank)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.inchesInput) { _ in
+                                model.calculateInchesToCentimeters()
+                            }
+                        ResultText(result: model.inchesToCentimetersResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Centimeters to Inches", subTitleLabel: "cm", placeHolderlabel: "cm", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.centimetersInput) { _ in
+                                model.calculateCentimetersToInches()
+                            }
+                        ResultText(result: model.centimetersToInchesResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Body Surface Area", 
+                                     subTitleLabel: "Height",subTitleLabel2: "Weight",
+                                     placeHolderlabel: "cm",placeHolderlabel2:"kg", textValue: $model.heightInput, 
+                                     textValue2: $model.weightInputBsa,
+                                     textValue3: $model.blank,numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.weightInputBsa) { _ in
+                                model.calculateBodySurfaceArea()
+                            }
+                        ResultText(result: model.bodySurfaceAreaResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Weight Based Body Surface Area", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputBbsa, textValue2: $model.blank, textValue3: $model.blank)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.weightInputBbsa) { _ in
+                                model.calculateWeightBasedBodySurfaceArea()
+                            }
+                        ResultText(result: model.weightBasedBodySurfaceAreaResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO2", subTitleLabel3: "PaO2", placeHolderlabel: "cmH2O", placeHolderlabel2: "%", placeHolderlabel3: "PaO2", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.pao2InputOI) { _ in
+                                model.calculateOxygenIndex()
+                            }
+                        ResultText(result: model.oxygenIndexResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "PaO2/FiO2 Ratio", 
+                                     subTitleLabel: "PaO2", subTitleLabel2: "FiO2",
+                                     placeHolderlabel: "mmHg", placeHolderlabel2: "%",  textValue: $model.pao2InputRatio, textValue2: $model.fio2InputRatio, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.fio2InputRatio) { _ in
+                                model.calculatePao2Fio2Ratio()
+                            }
+                        ResultText(result: model.paO2ByFiO2RatioResult)
+                            .padding(.horizontal, 30)
+                        
+                        
+                        ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 20)
                             .onChange(of: model.weightInputHLD) { _ in
@@ -50,18 +105,91 @@ struct CalculatorView: View {
                             }
                         }
                         
-                        ListItemView(titleLabel: "Centimetres To Inches", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank)
+                        ListItemView(titleLabel: "Cardiac Index Calculator",
+                                     subTitleLabel: "BSA", placeHolderlabel: "m2", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
-                        ResultText(result: model.centimetersToInchesResult)
+                            .padding(.bottom, 20)
+                            .onChange(of: model.bsaInput) { _ in
+                                model.calculateCardiacIndexCalculator()
+                            }
+                        if model.showCardiaIndexCalculatorList {
+                            withAnimation {
+                                ResultList(result: model.cardiacIndexCalculatorResult)
+                                    .padding(.horizontal, 30)
+                                    .padding(.vertical, 20)
+                            }
+                        }
+                        
+                        ListItemView(titleLabel: "Estimate Red Cell Mass",
+                                     subTitleLabel: "Weight", subTitleLabel2: "Hematocrit",
+                                     placeHolderlabel: "kg", placeHolderlabel2: "%",  textValue: $model.weightInputERCM, textValue2: $model.hematocritInputERCM, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.hematocritInputERCM) { _ in
+                                model.calculateEstimatedRedCellMass()
+                            }
+                        ResultText(result: model.estimatedRedCellMassResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO2", subTitleLabel3: "PaO2", placeHolderlabel: "cmH2O", placeHolderlabel2: "%", placeHolderlabel3: "PaO2", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
+                        ListItemView(titleLabel: "Dilutional Hematocrit(HCT)", subTitleLabel: "Weight", subTitleLabel2: "HCT", subTitleLabel3: "ECLS Circuit Vol.",
+                                     placeHolderlabel: "kg", placeHolderlabel2: "%", placeHolderlabel3: "mL",
+                                     textValue: $model.weightInputDilutionalHematorcrit, textValue2: $model.hctInput, textValue3: $model.eclsCircuitVolumeInput, numberOfField: 3)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.pao2InputOI) { _ in
-                                model.calculateOxygenIndex()
+                            .onChange(of: model.eclsCircuitVolumeInput) { _ in
+                                model.calculateDilutionalHematocrit()
                             }
-                        ResultText(result: model.oxygenIndexResult)
+                        ResultText(result: model.dilutionalHCTResult)
                             .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Cardiac Output",
+                                     subTitleLabel: "HR", subTitleLabel2: "Stroke Vol",
+                                     placeHolderlabel: "B/min", placeHolderlabel2: "mL",  textValue: $model.heartRateInput, textValue2: $model.strokeVolumeInput, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.strokeVolumeInput) { _ in
+                                model.calculateCardiacOutput()
+                            }
+                        ResultText(result: model.cardiacOutputResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Cardiac Index",
+                                     subTitleLabel: "CO", subTitleLabel2: "BSA",
+                                     placeHolderlabel: "L/min", placeHolderlabel2: "m2",  textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.cardiacIndexBsaInput) { _ in
+                                model.calculateCardiacIndex()
+                            }
+                        ResultText(result: model.cardiacIndexResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Systemic Vascular Resistance", subTitleLabel: "MAP", subTitleLabel2: "CVP", subTitleLabel3: "CO",
+                                     placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
+                                     textValue: $model.mapValueSVRInput, textValue2: $model.cvpSVRInput, textValue3: $model.cardiacOutputInputSVR, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.cardiacOutputInputSVR) { _ in
+                                model.calculateSystemicVascularResistance()
+                            }
+                        ResultText(result: model.systemicVascularResistanceResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Pulmonary Vascular Resistance", subTitleLabel: "MPAP", subTitleLabel2: "PCWP", subTitleLabel3: "CO",
+                                     placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
+                                     textValue: $model.mpapInput, textValue2: $model.pcwpInput, textValue3: $model.cardiacOutputPVR, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.cardiacOutputPVR) { _ in
+                                model.calculatePulmonaryVascularResistance()
+                            }
+                        ResultText(result: model.pulmonaryVascularResistanceResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Oxygen Content(CaO2) - Arterial", subTitleLabel: "Hgb", subTitleLabel2: "SaO2", subTitleLabel3: "PaO2",
+                                     placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
+                                     textValue: $model.hgbInput, textValue2: $model.sao2Input, textValue3: $model.pao2OCAInput, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.pao2OCAInput) { _ in
+                                model.calculateOxygenContentArterial()
+                            }
+                        ResultText(result: model.oxygenContentArterialResult)
+                            .padding(.horizontal, 30)
+                        
                     }
                 }
             }
@@ -295,8 +423,8 @@ func calPulmonaryVascularResistance(mpap: Float, pcwp: Float, cardiacOutput: Flo
     let vascularResistance = ((mpap - pcwp) / cardiacOutput) * 80
     return "\(String(format: "%.0f", vascularResistance)) Dynes-sec/cm\u{2075}"
 }
-func calOxygenContentArterial(hgb: Float, svo2: Float, pao2: Float) -> String{
-    let resultArterialOC = (hgb * 1.34 * (svo2 / 100)) + (pao2 * 0.003)
+func calOxygenContentArterial(hgb: Float, sao2: Float, pao2: Float) -> String{
+    let resultArterialOC = (hgb * 1.34 * (sao2 / 100)) + (pao2 * 0.003)
     return "\(String(format: "%.0f", resultArterialOC)) mL/dL"
 }
 func calOxygenDelivery(co: Float, cao2: Float) -> String{
