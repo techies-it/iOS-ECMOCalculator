@@ -225,7 +225,7 @@ struct CalculatorView: View {
                         
                         
                         ListItemView(titleLabel: "Sweep Gas",
-                                     subTitleLabel: "Current(PaCO\u{2082})", subTitleLabel2: "Current(Sweep Flow)", subTitleLabel3: "Desired(PaCO\u{2082})",
+                                     subTitleLabel: "Current (PaCO\u{2082})", subTitleLabel2: "Current (Sweep Flow)", subTitleLabel3: "Desired (PaCO\u{2082})",
                                      placeHolderlabel: "mmHg", placeHolderlabel2: "L/min", placeHolderlabel3: "mmHg",
                                      textValue: $model.currentPaco2Input, textValue2: $model.sweepFlowInput, textValue3: $model.desiredPaco2Input, numberOfField: 3)
                             .padding(.horizontal, 30)

@@ -48,7 +48,7 @@ struct ListItemView: View {
                 }
                 HStack(spacing: 10) {
                     InputTextField(placeholder: placeHolderlabel, inputText: $textValue)
-                    InputTextField(placeholder: placeHolderlabel2, inputText: $textValue)
+                    InputTextField(placeholder: placeHolderlabel2, inputText: $textValue2)
                 }
             }else if numberOfField == 3 {
                 HStack(spacing: 90) {
