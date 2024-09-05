@@ -72,7 +72,7 @@ struct CalculatorView: View {
                         ResultText(result: model.weightBasedBodySurfaceAreaResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO2", subTitleLabel3: "PaO2", placeHolderlabel: "cmH2O", placeHolderlabel2: "%", placeHolderlabel3: "PaO2", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
+                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO\u{2082}", subTitleLabel3: "PaO\u{2082}", placeHolderlabel: "cmH\u{2082}O", placeHolderlabel2: "%", placeHolderlabel3: "PaO\u{2082}", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
                             .padding(.horizontal, 30)
                             .onChange(of: model.pao2InputOI) { _ in
                                 model.calculateOxygenIndex()
@@ -80,8 +80,8 @@ struct CalculatorView: View {
                         ResultText(result: model.oxygenIndexResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "PaO2/FiO2 Ratio", 
-                                     subTitleLabel: "PaO2", subTitleLabel2: "FiO2",
+                        ListItemView(titleLabel: "PaO\u{2082}/FiO\u{2082} Ratio",
+                                     subTitleLabel: "PaO\u{2082}", subTitleLabel2: "FiO\u{2082}",
                                      placeHolderlabel: "mmHg", placeHolderlabel2: "%",  textValue: $model.pao2InputRatio, textValue2: $model.fio2InputRatio, textValue3: $model.blank, numberOfField: 2)
                             .padding(.horizontal, 30)
                             .onChange(of: model.fio2InputRatio) { _ in
@@ -106,7 +106,7 @@ struct CalculatorView: View {
                         }
                         
                         ListItemView(titleLabel: "Cardiac Index Calculator",
-                                     subTitleLabel: "BSA", placeHolderlabel: "m2", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank)
+                                     subTitleLabel: "BSA", placeHolderlabel: "m\u{00B2}", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 20)
                             .onChange(of: model.bsaInput) { _ in
@@ -152,7 +152,8 @@ struct CalculatorView: View {
                         
                         ListItemView(titleLabel: "Cardiac Index",
                                      subTitleLabel: "CO", subTitleLabel2: "BSA",
-                                     placeHolderlabel: "L/min", placeHolderlabel2: "m2",  textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2)
+                                     placeHolderlabel: "L/min", placeHolderlabel2: "m\u{00B2}",
+                                     textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cardiacIndexBsaInput) { _ in
                                 model.calculateCardiacIndex()
@@ -180,7 +181,7 @@ struct CalculatorView: View {
                         ResultText(result: model.pulmonaryVascularResistanceResult)
                             .padding(.horizontal, 30)
                         
-                        ListItemView(titleLabel: "Oxygen Content(CaO2) - Arterial", subTitleLabel: "Hgb", subTitleLabel2: "SaO2", subTitleLabel3: "PaO2",
+                        ListItemView(titleLabel: "Oxygen Content(CaO\u{2082}) - Arterial", subTitleLabel: "Hgb", subTitleLabel2: "SaO\u{2082}", subTitleLabel3: "PaO\u{2082}",
                                      placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
                                      textValue: $model.hgbInput, textValue2: $model.sao2Input, textValue3: $model.pao2OCAInput, numberOfField: 3)
                             .padding(.horizontal, 30)
@@ -189,6 +190,51 @@ struct CalculatorView: View {
                             }
                         ResultText(result: model.oxygenContentArterialResult)
                             .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Oxygen Delivery (DO\u{2082})",
+                                     subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}",
+                                     placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}",
+                                     textValue: $model.coODInput, textValue2: $model.cao2Input, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.cao2Input) { _ in
+                                model.calculateOxygenDelivery()
+                            }
+                        ResultText(result: model.oxygenDeliveryResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Oxygen Content(CvO\u{2082}) - Venous", subTitleLabel: "Hgb", subTitleLabel2: "SvO\u{2082}", subTitleLabel3: "PvO\u{2082}",
+                                     placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
+                                     textValue: $model.hgbOCVInput, textValue2: $model.svo2OCVInput, textValue3: $model.pvo2OCVInput, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.pvo2OCVInput) { _ in
+                                model.calculateOxygenContentVenous()
+                            }
+                        ResultText(result: model.oxygenContentVenousResult)
+                            .padding(.horizontal, 30)
+                        
+                        ListItemView(titleLabel: "Oxygen Consumption (VO\u{2082})",
+                                     subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}-CvO\u{2082}",
+                                     placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}-CvO\u{2082}",
+                                     textValue: $model.coOCInput, textValue2: $model.cao2cvo2, textValue3: $model.blank, numberOfField: 2)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.cao2cvo2) { _ in
+                                model.calculateOxygenConsumption()
+                            }
+                        ResultText(result: model.oxygenConsumptionResult)
+                            .padding(.horizontal, 30)
+                        
+                        
+                        ListItemView(titleLabel: "Sweep Gas",
+                                     subTitleLabel: "Current(PaCO\u{2082})", subTitleLabel2: "Current(Sweep Flow)", subTitleLabel3: "Desired(PaCO\u{2082})",
+                                     placeHolderlabel: "mmHg", placeHolderlabel2: "L/min", placeHolderlabel3: "mmHg",
+                                     textValue: $model.currentPaco2Input, textValue2: $model.sweepFlowInput, textValue3: $model.desiredPaco2Input, numberOfField: 3)
+                            .padding(.horizontal, 30)
+                            .onChange(of: model.desiredPaco2Input) { _ in
+                                model.calculateSweepGas()
+                            }
+                        ResultText(result: model.sweepGasResult)
+                            .padding(.horizontal, 30)
+                        
                         
                     }
                 }
