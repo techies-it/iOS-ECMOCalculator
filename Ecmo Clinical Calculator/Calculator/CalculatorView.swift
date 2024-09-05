@@ -12,13 +12,14 @@ struct CalculatorView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            VStack {
-                Text("Clinical Calculator")
-                    .font(.largeTitle)
-                    .foregroundStyle(.titleLabel)
-                    .padding(.top, 10)
-                    .padding(.bottom, 10)
+//            VStack {
+                
                 ScrollView {
+                    Text("Clinical Calculator")
+                        .font(.largeTitle)
+                        .foregroundStyle(.titleLabel)
+                        .padding(.top, 10)
+                        .padding(.bottom, 10)
                     VStack(spacing: 5) {
                         ListItemView(titleLabel: "Pounds to Kilogram", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputLbs, textValue2: $model.blank, textValue3: $model.blank)
                             .padding(.horizontal, 30)
@@ -64,7 +65,7 @@ struct CalculatorView: View {
                             .padding(.horizontal, 30)
                     }
                 }
-            }
+//            }
         }
     }
 }
