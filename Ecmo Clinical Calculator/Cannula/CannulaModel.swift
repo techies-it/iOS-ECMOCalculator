@@ -8,9 +8,24 @@
 import Foundation
 import SwiftUI
 
+
 class CannulaModel: ObservableObject{
     
+    @Published var bloodFlowOptions = [100, 150, 175, 200, 250]
+    
+    @Published var resultTargetBloodFlowArray: [String] {
+        didSet {
+            saveData()
+        }
+    }
+    
     @Published var weightInputCannula: String {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var resultTargetBloodFlow: String {
         didSet {
             saveData()
         }
@@ -91,6 +106,8 @@ class CannulaModel: ObservableObject{
     init() {
 
         self.weightInputCannula = UserDefaults.standard.string(forKey: "weightInputCannula") ?? ""
+        self.resultTargetBloodFlow = UserDefaults.standard.string(forKey: "resultTargetBloodFlow") ?? ""
+        
         self.heightInputCannula = UserDefaults.standard.string(forKey: "heightInputCannula") ?? ""
         self.entryType = UserDefaults.standard.string(forKey: "entryType") ?? ""
         self.targetType = UserDefaults.standard.string(forKey: "targetType") ?? ""
@@ -103,11 +120,18 @@ class CannulaModel: ObservableObject{
         self.isHeightVisible = UserDefaults.standard.bool(forKey: "isHeightVisible")
         self.isDropDownVisible = UserDefaults.standard.bool(forKey: "isDropDownVisible")
         self.isCannulaListVisible = UserDefaults.standard.bool(forKey: "isCannulaListVisible")
+        
+        
+        //Results
+        self.resultTargetBloodFlowArray = UserDefaults.standard.stringArray(forKey: "resultTargetBloodFlowArray") ?? [""]
 
     }
     
     private func saveData(){
         UserDefaults.standard.set(weightInputCannula, forKey: "weightInputCannula")
+        UserDefaults.standard.set(resultTargetBloodFlow, forKey: "resultTargetBloodFlow")
+        UserDefaults.standard.set(resultTargetBloodFlowArray,forKey: "resultTargetBloodFlowArray")
+
         UserDefaults.standard.set(heightInputCannula, forKey: "heightInputCannula")
         UserDefaults.standard.set(entryType, forKey: "entryType")
         UserDefaults.standard.set(targetType, forKey: "targetType")
@@ -169,5 +193,21 @@ class CannulaModel: ObservableObject{
         if heightInputCannula.isEmpty {
             isCannulaListVisible = false
         }
+    }
+    
+    func calculateTargetBloodFlow(){
+        //calculate all values for array
+        //keep it in array
+        resultTargetBloodFlowArray.removeAll()
+        for i in 0..<bloodFlowOptions.count{
+            if let weight = Float(weightInputCannula){
+                resultTargetBloodFlow = calTargetBloodFlow(weight: weight, option: Float(bloodFlowOptions[i]))
+            }
+            else{
+                resultTargetBloodFlow = "--L/min"
+            }
+            resultTargetBloodFlowArray.append(resultTargetBloodFlow)
+        }
+
     }
 }
