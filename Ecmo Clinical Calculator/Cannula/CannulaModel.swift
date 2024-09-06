@@ -28,7 +28,7 @@ class CannulaModel: ObservableObject{
         }
     }
     
-    @Published var entryType: String {
+    @Published var entryType: String = "Enter Weight" {
         didSet {
             saveData()
         }
@@ -77,7 +77,7 @@ class CannulaModel: ObservableObject{
             saveData()
         }
     }
-    @Published var selectedCI: Double? {
+    @Published var selectedCI: Float? {
         didSet {
             saveData()
         }
@@ -95,7 +95,7 @@ class CannulaModel: ObservableObject{
         self.entryType = UserDefaults.standard.string(forKey: "entryType") ?? ""
         self.targetType = UserDefaults.standard.string(forKey: "targetType") ?? ""
         self.selectedBloodFlow = UserDefaults.standard.integer(forKey: "selectedBloodFlow") ?? nil
-        self.selectedCI = UserDefaults.standard.double(forKey: "selectedCI")
+        self.selectedCI = UserDefaults.standard.float(forKey: "selectedCI")
         self.bsaResult = UserDefaults.standard.string(forKey: "bsaResult") ?? ""
         self.isBsaResultVisible = UserDefaults.standard.bool(forKey: "isBsaResultVisible")
         self.isBloodFlowVisible = UserDefaults.standard.bool(forKey: "isBloodFlowVisible")
@@ -157,13 +157,14 @@ class CannulaModel: ObservableObject{
             selectedBloodFlow = nil
             targetType = "Target Blood Flow (ml/kg/min)"
             bsaResult = " "
+            entryType = "Pediatric Entry"
         } else {//Adult
             isHeightVisible = true
             isDropDownVisible = true
             isBloodFlowVisible = false
             selectedCI = nil
             targetType = "Target C.I."
-            
+            entryType = "Adult Entry"
         }
         if heightInputCannula.isEmpty {
             isCannulaListVisible = false
