@@ -13,7 +13,7 @@ struct CannulaView: View {
 //    @State private var selectedBloodFlow: Int?
 //    @State private var selectedCI: Double?
     @State private var bloodFlowOptions = [100, 150, 175, 200, 250]
-    @State private var CIFlowOptions = [0.5, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4]
+    @State private var CIFlowOptions: [Float] = [0.5, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4]
 //    @State private var isHeightVisible: Bool = false
 //    @State private var isDropDownVisible: Bool = false
 //    @State private var isBloodFlowVisible: Bool = false
@@ -28,8 +28,16 @@ struct CannulaView: View {
             ScrollView{
                 Text("Cannula Selection")
                     .font(.largeTitle)
-                    .padding(.top)
-                    .padding(.bottom, 20)
+                    .padding(.top, 5)
+                    .padding(.bottom, 15)
+                VStack{
+                    Text(model.entryType.isEmpty ? "Enter Weight" : model.entryType)
+                        .font(.system(size: 12,weight: .semibold))
+                        .multilineTextAlignment(.leading)
+                        .foregroundStyle(.black)
+                        .padding(.leading, 5)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 VStack(spacing: 0) {
                     GeometryReader { geometry in
                     HStack(spacing: 5) {
@@ -98,15 +106,16 @@ struct CannulaView: View {
                                     .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width - 10) / 2, height: 20, alignment: .leading)
                                 Menu {
                                     if !model.isHeightVisible {
+                                        Text("TargetBF")
                                         ForEach(bloodFlowOptions, id: \.self) { option in
                                             Button("\(option)") {
                                                 model.selectedBloodFlow = option
                                                 model.isCannulaListVisible = true
-                                            }
+                                            }.multilineTextAlignment(.center)
                                         }
                                     }else{
                                         ForEach(CIFlowOptions, id: \.self) { option in
-                                            Button("\(option) ml/kg/min") {
+                                            Button("\(String(format: "%.1f", option))") {
                                                 model.selectedCI = option
                                                 model.isCannulaListVisible = true
                                             }
@@ -122,7 +131,7 @@ struct CannulaView: View {
                                             .frame(alignment: .leading)
 
                                     }else{
-                                        Text(model.selectedCI == nil ? "Select" : "\(model.selectedCI!)")
+                                        Text(model.selectedCI == nil ? "Select" : "\(String(format: "%.1f", model.selectedCI!))")
                                             .font(.system(size: 12))
                                             .padding(.trailing, 20)
 
@@ -140,12 +149,12 @@ struct CannulaView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    }.padding(.bottom, 35)
+                    }.padding(.bottom, 65)
                     
                         ResultText(result: model.bsaResult)
                             .padding(.top, 10)
                             .padding(.bottom, 10)
-                            .padding(.horizontal, 15)
+                            .padding(.horizontal, 5)
                     VStack {
                         if model.isBloodFlowVisible {
                             // Display Blood Flow Results
@@ -393,7 +402,7 @@ struct CannulaView: View {
         return String(format: "%.2f", Double(option) / 1000.0)
     }
     
-    private func calculateFlowRate(for option: Double) -> String {
+    private func calculateFlowRate(for option: Float) -> String {
         // Implement the logic to calculate the flow rate based on the selected cardiac index
         
         let result = "\(option) ml/kg/min : \(String(format: "%.2f", option * 5)) L/min"
@@ -475,5 +484,5 @@ func cannulaWeightBsa(weight: Float,height: Float)-> String{
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsa = 0.007184 * weightPower * heightPower
-    return "\(String(format: "%.3f", bsa))  m\u{00B2}"
+    return "BSA \(String(format: "%.3f", bsa))  m\u{00B2}"
 }
