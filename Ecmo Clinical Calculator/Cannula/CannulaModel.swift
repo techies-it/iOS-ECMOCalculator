@@ -63,13 +63,7 @@ class CannulaModel: ObservableObject{
         }
     }
     
-    @Published var cardiacOutputResult: Float {
-        didSet {
-            saveData()
-        }
-    }
-    
-    @Published var adultTargetBF: Float {
+    @Published var pediatricBloodFlow: Float {
         didSet {
             saveData()
         }
@@ -77,6 +71,24 @@ class CannulaModel: ObservableObject{
     
     
     @Published var bsaResult: String {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var pediatricVANeckDictionary: [String: String] = [:] {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var pediatricVAGroinDictionary: [String: String] = [:] {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var pediatricVVDLDictionary: [String: String] = [:] {
         didSet {
             saveData()
         }
@@ -162,8 +174,7 @@ class CannulaModel: ObservableObject{
         //Results
         self.bsaResult = UserDefaults.standard.string(forKey: "bsaResult") ?? ""
         
-        self.cardiacOutputResult = UserDefaults.standard.float(forKey: "cardiacOutputResult") ?? 0.0
-        self.adultTargetBF = UserDefaults.standard.float(forKey: "adultTargetBF") ?? 0.0
+        self.pediatricBloodFlow = UserDefaults.standard.float(forKey: "pediatricBloodFlow") ?? 0.0
 
         self.resultTargetBloodFlow = UserDefaults.standard.string(forKey: "resultTargetBloodFlow") ?? ""
         self.resultTargetBloodFlowArray = UserDefaults.standard.stringArray(forKey: "resultTargetBloodFlowArray") ?? [""]
@@ -172,6 +183,8 @@ class CannulaModel: ObservableObject{
         self.adultResultTargetBloodFlow = UserDefaults.standard.string(forKey: "adultResultTargetBloodFlow") ?? ""
         self.adultResultTargetBloodFlowArray = UserDefaults.standard.stringArray(forKey: "adultResultTargetBloodFlowArray") ?? [""]
         self.adultResultHighlightBloodFlow = UserDefaults.standard.integer(forKey: "adultResultHighlightBloodFlow")
+        
+//        self.pediatricVANeckDictionary = UserDefaults.standard.dictionary(forKey: "pediatricVANeckDictionary") ?? [String: Any]
         
 
     }
@@ -186,8 +199,7 @@ class CannulaModel: ObservableObject{
         UserDefaults.standard.set(adultResultTargetBloodFlowArray,forKey: "resultTargetBloodFlowArray")
         UserDefaults.standard.set(adultResultHighlightBloodFlow,forKey: "resultHighlightBloodFlow")
         
-        UserDefaults.standard.set(cardiacOutputResult,forKey: "cardiacOutputResult")
-        UserDefaults.standard.set(adultResultHighlightBloodFlow,forKey: "resultHighlightBloodFlow")
+        UserDefaults.standard.set(pediatricBloodFlow,forKey: "pediatricBloodFlow")
 
         UserDefaults.standard.set(heightInputCannula, forKey: "heightInputCannula")
         UserDefaults.standard.set(entryType, forKey: "entryType")
@@ -201,6 +213,8 @@ class CannulaModel: ObservableObject{
         UserDefaults.standard.set(isHeightVisible, forKey: "isHeightVisible")
         UserDefaults.standard.set(isDropDownVisible, forKey: "isDropDownVisible")
         UserDefaults.standard.set(isCannulaListVisible, forKey: "isCannulaListVisible")
+        
+//        UserDefaults.standard.set(pediatricVANeckDictionary, forKey: "pediatricVANeckDictionary")
     }
     
     func handleHeightChange() {
@@ -252,18 +266,7 @@ class CannulaModel: ObservableObject{
             isCannulaListVisible = false
         }
     }
-    
-//    func calculateAdultTargetBloodFlow(option: Float) -> (Float, Float){
-//        let weightPower = pow(Float(weightInputCannula) ?? 0.0, 0.425)
-//        let heightPower = pow(Float(heightInputCannula) ?? 0.0, 0.725)
-//        let bsa = 0.007184 * weightPower * heightPower
-//        
-//        cardiacOutputResult = (option * bsa * 100)/(100.0)
-//            
-//        adultTargetBF  = ((cardiacOutputResult * 1000)/(Float(weightInputCannula) ?? 0.0) * 100)/100.0
-////        adultResultTargetBloodFlow = "\(option) C.I. = \(cardiacOutputResult) L/min = \(adultTargetBF) ml/kg/min"
-//        return (cardiacOutputResult, adultTargetBF)
-//    }
+
     
     func calculateTargetBloodFlow(){
         //calculate all values for array
@@ -274,7 +277,7 @@ class CannulaModel: ObservableObject{
                 for i in 0..<bloodFlowOptions.count{
                     
                     if let weight = Float(weightInputCannula){
-                        resultTargetBloodFlow = calTargetBloodFlow(weight: weight, option: Float(bloodFlowOptions[i]))
+                        resultTargetBloodFlow = calTargetBloodFlow(weight: weight, option: Float(bloodFlowOptions[i])).0
                     }
                     else{
                         resultTargetBloodFlow = "--L/min"
@@ -290,18 +293,14 @@ class CannulaModel: ObservableObject{
         for i in 0..<bloodFlowOptions.count{
             if bloodFlowOptions[i] == selectedValue{
                 resultHighlightBloodFlow = i
+                pediatricBloodFlow = calTargetBloodFlow(weight: Float(weightInputCannula)!, option: Float(bloodFlowOptions[i])).1
+
+                pediatricFrs()
             }
         }
+        
     }
-    
-//    func highlightAdultBloodFlow(selectedValue: Double){
-//        for i in 0..<CIFlowOptions.count{
-//            if CIFlowOptions[i] == selectedValue{
-//                adultResultHighlightBloodFlow = i
-//            }
-//        }
-//    }
-//    
+      
     func calculateWeightBasedBodySurfaceArea(){
         if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
             bsaResult = cannulaWeightBsa(weight: weight, height: height)
@@ -314,4 +313,35 @@ class CannulaModel: ObservableObject{
         
     
     }
+    
+    func pediatricFrs(){
+        //Call all pediatric list functions here
+        print("value of pediatric Blood flow is \(pediatricBloodFlow) && \(resultTargetBloodFlow)")
+        pediatricVANeck()
+        pediatricVAGroin()
+        pediatricVVDL()
+    }
+    
+    func pediatricVANeck(){
+       
+        pediatricVANeckDictionary[vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVANeckDictionary[vaNeckVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaNeckVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+        
+    }
+    
+    func pediatricVAGroin(){
+        pediatricVAGroinDictionary[vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVAGroinDictionary[vaGroinVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaGroinVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+    }
+    
+    func pediatricVVDL(){
+        pediatricVVDLDictionary[vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow).0] = vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVVDLDictionary[vvdlCrescentdualECLSCannula(pediatricBloodFlow: pediatricBloodFlow).0] = vvdlCrescentdualECLSCannula(pediatricBloodFlow: pediatricBloodFlow).1
+    }
+    
+    func adultFrs(){
+        
+    }
 }
+
+
