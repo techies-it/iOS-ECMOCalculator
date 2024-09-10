@@ -7,240 +7,459 @@
 
 import SwiftUI
 
+
+
 struct CalculatorView: View {
     @StateObject private var model = CalculatorModel()
+    @StateObject private var keyboardObserver = KeyboardObserver()
+    
+    private enum FocusedField: Hashable {
+        case weightInputLbs, weightInputKg, inchesInput, centimetersInput, heightInput, weightInputBsa, weightInputBbsa, mapInputOI, pao2InputOI, fio2InputOI, pao2InputRatio, fio2InputRatio, weightInputHLD, bsaInput, weightInputERCM, hematocritInputERCM, weightInputDilutionalHematorcrit, hctInput, eclsCircuitVolumeInput, heartRateInput, strokeVolumeInput, cardiacOutputInput, cardiacIndexBsaInput, mapValueSVRInput, cvpSVRInput, cardiacOutputInputSVR, mpapInput, pcwpInput, cardiacOutputPVR, hgbInput, sao2Input, pao2OCAInput, coODInput, cao2Input, hgbOCVInput, svo2OCVInput, pvo2OCVInput, coOCInput, cao2cvo2, currentPaco2Input, sweepFlowInput, desiredPaco2Input
+    }
+    
+    @FocusState private var focusedField: FocusedField?
+    @State private var scrollViewProxy: ScrollViewProxy? = nil
+    @State private var scrollViewID = UUID()
     
     var body: some View {
         VStack(spacing: 0) {
-//            VStack {
-                
-                ScrollView {
-                    Text("Clinical Calculator")
-                        .font(.largeTitle)
-                        .foregroundStyle(.titleLabel)
-                        .padding(.top, 10)
-                        .padding(.bottom, 10)
-                    VStack(spacing: 5) {
-                        ListItemView(titleLabel: "Pounds to Kilogram", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputLbs, textValue2: $model.blank, textValue3: $model.blank)
+            //            VStack {
+            GeometryReader { geometry in
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        Text("Clinical Calculator")
+                            .font(.system(size: 22, weight: .medium))
+                            .foregroundStyle(.titleLabel)
+                            .padding(.top, 10)
+                            .padding(.bottom, 10)
+                        VStack(spacing: 5) {
+                            ListItemView(titleLabel: "Pounds to Kilogram", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputLbs, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: 0)
+                                .padding(.horizontal, 30)
+                                .focused($focusedField, equals: .weightInputLbs)
+                                .onChange(of: model.weightInputLbs) { _ in
+                                    model.calculatePoundsToKg()
+                                }
+                            ResultText(result: model.poundsToKgResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Kilogram to Pounds", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputKg, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: 0)
+                                .padding(.horizontal, 30)
+                                .focused($focusedField, equals: .weightInputKg)
+                                .onChange(of: model.weightInputKg) { _ in
+                                    model.calculateKgToPounds()
+                                }
+                            ResultText(result: model.kgToPoundsResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Inches to Centimeters", subTitleLabel: "in", placeHolderlabel: "in", textValue: $model.inchesInput, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: 0)
+                                .padding(.horizontal, 30)
+                                .focused($focusedField, equals: .inchesInput)
+                                .onChange(of: model.inchesInput) { _ in
+                                    model.calculateInchesToCentimeters()
+                                }
+                            ResultText(result: model.inchesToCentimetersResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Centimeters to Inches", subTitleLabel: "cm", placeHolderlabel: "cm", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: 0)
+                                .padding(.horizontal, 30)
+                                .focused($focusedField, equals: .centimetersInput)
+                                .onChange(of: model.centimetersInput) { _ in
+                                    model.calculateCentimetersToInches()
+                                }
+                            ResultText(result: model.centimetersToInchesResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Body Surface Area",
+                                         subTitleLabel: "Height",subTitleLabel2: "Weight",
+                                         placeHolderlabel: "cm",placeHolderlabel2:"kg", textValue: $model.heightInput,
+                                         textValue2: $model.weightInputBsa,
+                                         textValue3: $model.blank,numberOfField: 2, scrollIDInt: FocusedField.heightInput.hashValue)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.weightInputLbs) { _ in
-                                model.calculatePoundsToKg()
-                            }
-                        ResultText(result: model.poundsToKgResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Kilogram to Pounds", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $model.weightInputKg, textValue2: $model.blank, textValue3: $model.blank)
-                            .padding(.horizontal, 30)
-                            .onChange(of: model.weightInputKg) { _ in
-                                model.calculateKgToPounds()
-                            }
-                        ResultText(result: model.kgToPoundsResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Inches to Centimeters", subTitleLabel: "in", placeHolderlabel: "in", textValue: $model.inchesInput, textValue2: $model.blank, textValue3: $model.blank)
-                            .padding(.horizontal, 30)
-                            .onChange(of: model.inchesInput) { _ in
-                                model.calculateInchesToCentimeters()
-                            }
-                        ResultText(result: model.inchesToCentimetersResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Centimeters to Inches", subTitleLabel: "cm", placeHolderlabel: "cm", textValue: $model.centimetersInput, textValue2: $model.blank, textValue3: $model.blank)
-                            .padding(.horizontal, 30)
-                            .onChange(of: model.centimetersInput) { _ in
-                                model.calculateCentimetersToInches()
-                            }
-                        ResultText(result: model.centimetersToInchesResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Body Surface Area", 
-                                     subTitleLabel: "Height",subTitleLabel2: "Weight",
-                                     placeHolderlabel: "cm",placeHolderlabel2:"kg", textValue: $model.heightInput, 
-                                     textValue2: $model.weightInputBsa,
-                                     textValue3: $model.blank,numberOfField: 2)
-                            .padding(.horizontal, 30)
+                            .focused($focusedField, equals: .weightInputLbs)
+                            .focused($focusedField, equals: .heightInput)
                             .onChange(of: model.weightInputBsa) { _ in
                                 model.calculateBodySurfaceArea()
                             }
-                        ResultText(result: model.bodySurfaceAreaResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Weight Based Body Surface Area", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputBbsa, textValue2: $model.blank, textValue3: $model.blank)
-                            .padding(.horizontal, 30)
-                            .onChange(of: model.weightInputBbsa) { _ in
-                                model.calculateWeightBasedBodySurfaceArea()
+//                            .id(FocusedField.heightInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.heightInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
                             }
-                        ResultText(result: model.weightBasedBodySurfaceAreaResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO\u{2082}", subTitleLabel3: "PaO\u{2082}", placeHolderlabel: "cmH\u{2082}O", placeHolderlabel2: "%", placeHolderlabel3: "PaO\u{2082}", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3)
-                            .padding(.horizontal, 30)
-                            .onChange(of: model.pao2InputOI) { _ in
-                                model.calculateOxygenIndex()
-                            }
-                        ResultText(result: model.oxygenIndexResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "PaO\u{2082}/FiO\u{2082} Ratio",
-                                     subTitleLabel: "PaO\u{2082}", subTitleLabel2: "FiO\u{2082}",
-                                     placeHolderlabel: "mmHg", placeHolderlabel2: "%",  textValue: $model.pao2InputRatio, textValue2: $model.fio2InputRatio, textValue3: $model.blank, numberOfField: 2)
+                            ResultText(result: model.bodySurfaceAreaResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Weight Based Body Surface Area", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputBbsa, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.weightInputBbsa.hashValue)
+                                .padding(.horizontal, 30)
+                                .onChange(of: model.weightInputBbsa) { _ in
+                                    model.calculateWeightBasedBodySurfaceArea()
+                                }
+                                
+                                .onTapGesture {
+                                    DispatchQueue.main.async {
+                                        withAnimation {
+                                            proxy.scrollTo(FocusedField.weightInputBbsa.hashValue, anchor: .center)
+                                            
+                                            
+                                        }
+                                    }
+                                }
+                            ResultText(result: model.weightBasedBodySurfaceAreaResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO\u{2082}", subTitleLabel3: "PaO\u{2082}", placeHolderlabel: "cmH\u{2082}O", placeHolderlabel2: "%", placeHolderlabel3: "PaO\u{2082}", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3, scrollIDInt: FocusedField.mapInputOI.hashValue)
+                                .padding(.horizontal, 30)
+                                .onChange(of: model.pao2InputOI) { _ in
+                                    model.calculateOxygenIndex()
+                                }
+//                                .id(FocusedField.mapInputOI)
+                                .onTapGesture {
+                                    DispatchQueue.main.async {
+                                        withAnimation {
+                                            proxy.scrollTo(FocusedField.mapInputOI.hashValue, anchor: .center)
+                                            
+                                            
+                                        }
+                                    }
+                                }
+                            ResultText(result: model.oxygenIndexResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "PaO\u{2082}/FiO\u{2082} Ratio",
+                                         subTitleLabel: "PaO\u{2082}", subTitleLabel2: "FiO\u{2082}",
+                                         placeHolderlabel: "mmHg", placeHolderlabel2: "%",  textValue: $model.pao2InputRatio, textValue2: $model.fio2InputRatio, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.pao2InputRatio.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.fio2InputRatio) { _ in
                                 model.calculatePao2Fio2Ratio()
                             }
-                        ResultText(result: model.paO2ByFiO2RatioResult)
-                            .padding(.horizontal, 30)
-                        
-                        
-                        ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank)
-                            .padding(.horizontal, 30)
-                            .padding(.bottom, 20)
-                            .onChange(of: model.weightInputHLD) { _ in
-                                model.calculateHeparinLoadingDose()
+//                            .id(FocusedField.pao2InputRatio)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.pao2InputRatio.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
                             }
-                        if model.showHeparinList {
-                            withAnimation {
-                                ResultList(result: model.heparinLoadingDoseResult)
-                                    .padding(.horizontal, 30)
-                                    .padding(.vertical, 20)
+                            ResultText(result: model.paO2ByFiO2RatioResult)
+                                .padding(.horizontal, 30)
+                            
+                            
+                            ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "Weight", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.weightInputHLD.hashValue)
+                                .padding(.horizontal, 30)
+                                .padding(.bottom, 20)
+                                
+                                .onChange(of: model.weightInputHLD) { _ in
+                                    model.calculateHeparinLoadingDose()
+                                }
+//                                .id(FocusedField.weightInputHLD)
+                                .onTapGesture {
+                                    DispatchQueue.main.async {
+                                        withAnimation {
+                                            proxy.scrollTo(FocusedField.weightInputHLD.hashValue, anchor: .center)
+                                            
+                                            
+                                        }
+                                    }
+                                }
+                            if model.showHeparinList {
+                                withAnimation {
+                                    ResultList(result: model.heparinLoadingDoseResult)
+                                        .padding(.horizontal, 30)
+                                        .padding(.vertical, 20)
+                                }
                             }
-                        }
-                        
-                        ListItemView(titleLabel: "Cardiac Index Calculator",
-                                     subTitleLabel: "BSA", placeHolderlabel: "m\u{00B2}", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank)
+                            
+                            ListItemView(titleLabel: "Cardiac Index Calculator",
+                                         subTitleLabel: "BSA", placeHolderlabel: "m\u{00B2}", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.bsaInput.hashValue)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 20)
                             .onChange(of: model.bsaInput) { _ in
                                 model.calculateCardiacIndexCalculator()
                             }
-                        if model.showCardiaIndexCalculatorList {
-                            withAnimation {
-                                ResultList(result: model.cardiacIndexCalculatorResult)
-                                    .padding(.horizontal, 30)
-                                    .padding(.vertical, 20)
+//                            .id(FocusedField.bsaInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.bsaInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
                             }
-                        }
-                        
-                        ListItemView(titleLabel: "Estimate Red Cell Mass",
-                                     subTitleLabel: "Weight", subTitleLabel2: "Hematocrit",
-                                     placeHolderlabel: "kg", placeHolderlabel2: "%",  textValue: $model.weightInputERCM, textValue2: $model.hematocritInputERCM, textValue3: $model.blank, numberOfField: 2)
+                            if model.showCardiaIndexCalculatorList {
+                                withAnimation {
+                                    ResultList(result: model.cardiacIndexCalculatorResult)
+                                        .padding(.horizontal, 30)
+                                        .padding(.vertical, 20)
+                                }
+                            }
+                            
+                            ListItemView(titleLabel: "Estimate Red Cell Mass",
+                                         subTitleLabel: "Weight", subTitleLabel2: "Hematocrit",
+                                         placeHolderlabel: "kg", placeHolderlabel2: "%",  textValue: $model.weightInputERCM, textValue2: $model.hematocritInputERCM, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.weightInputERCM.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.hematocritInputERCM) { _ in
                                 model.calculateEstimatedRedCellMass()
                             }
-                        ResultText(result: model.estimatedRedCellMassResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Dilutional Hematocrit(HCT)", subTitleLabel: "Weight", subTitleLabel2: "HCT", subTitleLabel3: "ECLS Circuit Vol.",
-                                     placeHolderlabel: "kg", placeHolderlabel2: "%", placeHolderlabel3: "mL",
-                                     textValue: $model.weightInputDilutionalHematorcrit, textValue2: $model.hctInput, textValue3: $model.eclsCircuitVolumeInput, numberOfField: 3)
+//                            .id(FocusedField.weightInputERCM)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.weightInputERCM.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.estimatedRedCellMassResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Dilutional Hematocrit(HCT)", subTitleLabel: "Weight", subTitleLabel2: "HCT", subTitleLabel3: "ECLS Circuit Vol.",
+                                         placeHolderlabel: "kg", placeHolderlabel2: "%", placeHolderlabel3: "mL",
+                                         textValue: $model.weightInputDilutionalHematorcrit, textValue2: $model.hctInput, textValue3: $model.eclsCircuitVolumeInput, numberOfField: 3, scrollIDInt: FocusedField.weightInputDilutionalHematorcrit.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.eclsCircuitVolumeInput) { _ in
                                 model.calculateDilutionalHematocrit()
                             }
-                        ResultText(result: model.dilutionalHCTResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Cardiac Output",
-                                     subTitleLabel: "HR", subTitleLabel2: "Stroke Vol",
-                                     placeHolderlabel: "B/min", placeHolderlabel2: "mL",  textValue: $model.heartRateInput, textValue2: $model.strokeVolumeInput, textValue3: $model.blank, numberOfField: 2)
+//                            .id(FocusedField.weightInputDilutionalHematorcrit)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.weightInputDilutionalHematorcrit.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.dilutionalHCTResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Cardiac Output",
+                                         subTitleLabel: "HR", subTitleLabel2: "Stroke Vol",
+                                         placeHolderlabel: "B/min", placeHolderlabel2: "mL",  textValue: $model.heartRateInput, textValue2: $model.strokeVolumeInput, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.heartRateInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.strokeVolumeInput) { _ in
                                 model.calculateCardiacOutput()
                             }
-                        ResultText(result: model.cardiacOutputResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Cardiac Index",
-                                     subTitleLabel: "CO", subTitleLabel2: "BSA",
-                                     placeHolderlabel: "L/min", placeHolderlabel2: "m\u{00B2}",
-                                     textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2)
+//                            .id(FocusedField.heartRateInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.heartRateInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.cardiacOutputResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Cardiac Index",
+                                         subTitleLabel: "CO", subTitleLabel2: "BSA",
+                                         placeHolderlabel: "L/min", placeHolderlabel2: "m\u{00B2}",
+                                         textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.cardiacOutputInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cardiacIndexBsaInput) { _ in
                                 model.calculateCardiacIndex()
                             }
-                        ResultText(result: model.cardiacIndexResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Systemic Vascular Resistance", subTitleLabel: "MAP", subTitleLabel2: "CVP", subTitleLabel3: "CO",
-                                     placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
-                                     textValue: $model.mapValueSVRInput, textValue2: $model.cvpSVRInput, textValue3: $model.cardiacOutputInputSVR, numberOfField: 3)
+//                            .id(FocusedField.cardiacOutputInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.cardiacOutputInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.cardiacIndexResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Systemic Vascular Resistance", subTitleLabel: "MAP", subTitleLabel2: "CVP", subTitleLabel3: "CO",
+                                         placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
+                                         textValue: $model.mapValueSVRInput, textValue2: $model.cvpSVRInput, textValue3: $model.cardiacOutputInputSVR, numberOfField: 3, scrollIDInt: FocusedField.mapValueSVRInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cardiacOutputInputSVR) { _ in
                                 model.calculateSystemicVascularResistance()
                             }
-                        ResultText(result: model.systemicVascularResistanceResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Pulmonary Vascular Resistance", subTitleLabel: "MPAP", subTitleLabel2: "PCWP", subTitleLabel3: "CO",
-                                     placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
-                                     textValue: $model.mpapInput, textValue2: $model.pcwpInput, textValue3: $model.cardiacOutputPVR, numberOfField: 3)
+//                            .id(FocusedField.mapValueSVRInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.mapValueSVRInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.systemicVascularResistanceResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Pulmonary Vascular Resistance", subTitleLabel: "MPAP", subTitleLabel2: "PCWP", subTitleLabel3: "CO",
+                                         placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
+                                         textValue: $model.mpapInput, textValue2: $model.pcwpInput, textValue3: $model.cardiacOutputPVR, numberOfField: 3, scrollIDInt: FocusedField.mpapInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cardiacOutputPVR) { _ in
                                 model.calculatePulmonaryVascularResistance()
                             }
-                        ResultText(result: model.pulmonaryVascularResistanceResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Oxygen Content(CaO\u{2082}) - Arterial", subTitleLabel: "Hgb", subTitleLabel2: "SaO\u{2082}", subTitleLabel3: "PaO\u{2082}",
-                                     placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
-                                     textValue: $model.hgbInput, textValue2: $model.sao2Input, textValue3: $model.pao2OCAInput, numberOfField: 3)
+//                            .id(FocusedField.mpapInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.mpapInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.pulmonaryVascularResistanceResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Oxygen Content(CaO\u{2082}) - Arterial", subTitleLabel: "Hgb", subTitleLabel2: "SaO\u{2082}", subTitleLabel3: "PaO\u{2082}",
+                                         placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
+                                         textValue: $model.hgbInput, textValue2: $model.sao2Input, textValue3: $model.pao2OCAInput, numberOfField: 3, scrollIDInt: FocusedField.hgbInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.pao2OCAInput) { _ in
                                 model.calculateOxygenContentArterial()
                             }
-                        ResultText(result: model.oxygenContentArterialResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Oxygen Delivery (DO\u{2082})",
-                                     subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}",
-                                     placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}",
-                                     textValue: $model.coODInput, textValue2: $model.cao2Input, textValue3: $model.blank, numberOfField: 2)
+//                            .id(FocusedField.hgbInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.hgbInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.oxygenContentArterialResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Oxygen Delivery (DO\u{2082})",
+                                         subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}",
+                                         placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}",
+                                         textValue: $model.coODInput, textValue2: $model.cao2Input, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.coODInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cao2Input) { _ in
                                 model.calculateOxygenDelivery()
                             }
-                        ResultText(result: model.oxygenDeliveryResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Oxygen Content(CvO\u{2082}) - Venous", subTitleLabel: "Hgb", subTitleLabel2: "SvO\u{2082}", subTitleLabel3: "PvO\u{2082}",
-                                     placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
-                                     textValue: $model.hgbOCVInput, textValue2: $model.svo2OCVInput, textValue3: $model.pvo2OCVInput, numberOfField: 3)
+//                            .id(FocusedField.coODInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.coODInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.oxygenDeliveryResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Oxygen Content(CvO\u{2082}) - Venous", subTitleLabel: "Hgb", subTitleLabel2: "SvO\u{2082}", subTitleLabel3: "PvO\u{2082}",
+                                         placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
+                                         textValue: $model.hgbOCVInput, textValue2: $model.svo2OCVInput, textValue3: $model.pvo2OCVInput, numberOfField: 3, scrollIDInt: FocusedField.hgbOCVInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.pvo2OCVInput) { _ in
                                 model.calculateOxygenContentVenous()
                             }
-                        ResultText(result: model.oxygenContentVenousResult)
-                            .padding(.horizontal, 30)
-                        
-                        ListItemView(titleLabel: "Oxygen Consumption (VO\u{2082})",
-                                     subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}-CvO\u{2082}",
-                                     placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}-CvO\u{2082}",
-                                     textValue: $model.coOCInput, textValue2: $model.cao2cvo2, textValue3: $model.blank, numberOfField: 2)
+//                            .id(FocusedField.hgbOCVInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.hgbOCVInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.oxygenContentVenousResult)
+                                .padding(.horizontal, 30)
+                            
+                            ListItemView(titleLabel: "Oxygen Consumption (VO\u{2082})",
+                                         subTitleLabel: "CO", subTitleLabel2: "CaO\u{2082}-CvO\u{2082}",
+                                         placeHolderlabel: "L/min", placeHolderlabel2: "CaO\u{2082}-CvO\u{2082}",
+                                         textValue: $model.coOCInput, textValue2: $model.cao2cvo2, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.coOCInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cao2cvo2) { _ in
                                 model.calculateOxygenConsumption()
                             }
-                        ResultText(result: model.oxygenConsumptionResult)
+                            .id(FocusedField.coOCInput)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.coOCInput.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            ResultText(result: model.oxygenConsumptionResult)
+                                .padding(.horizontal, 30)
+                            
+                            
+                            ListItemView(titleLabel: "Sweep Gas",
+                                         subTitleLabel: "Current (PaCO\u{2082})", subTitleLabel2: "Current (Sweep Flow)", subTitleLabel3: "Desired (PaCO\u{2082})",
+                                         placeHolderlabel: "mmHg", placeHolderlabel2: "L/min", placeHolderlabel3: "mmHg",
+                                         textValue: $model.currentPaco2Input, textValue2: $model.sweepFlowInput, textValue3: $model.desiredPaco2Input, numberOfField: 3, scrollIDInt: FocusedField.currentPaco2Input.hashValue)
                             .padding(.horizontal, 30)
-                        
-                        
-                        ListItemView(titleLabel: "Sweep Gas",
-                                     subTitleLabel: "Current (PaCO\u{2082})", subTitleLabel2: "Current (Sweep Flow)", subTitleLabel3: "Desired (PaCO\u{2082})",
-                                     placeHolderlabel: "mmHg", placeHolderlabel2: "L/min", placeHolderlabel3: "mmHg",
-                                     textValue: $model.currentPaco2Input, textValue2: $model.sweepFlowInput, textValue3: $model.desiredPaco2Input, numberOfField: 3)
-                            .padding(.horizontal, 30)
+                            .focused($focusedField, equals: .currentPaco2Input)
+                            .focused($focusedField, equals: .sweepFlowInput)
+                            .focused($focusedField, equals: .desiredPaco2Input)
+//                            .id(FocusedField.currentPaco2Input)
                             .onChange(of: model.desiredPaco2Input) { _ in
                                 model.calculateSweepGas()
                             }
-                        ResultText(result: model.sweepGasResult)
-                            .padding(.horizontal, 30)
+                            .onTapGesture {
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        proxy.scrollTo(FocusedField.currentPaco2Input.hashValue, anchor: .center)
+                                        
+                                        
+                                    }
+                                }
+                            }
+                            
+                            ResultText(result: model.sweepGasResult)
+                                .padding(.horizontal, 30)
+                            
+                            
+                        }
+                        .padding(.bottom, keyboardObserver.keyboardHeight) // Adjust for keyboard height
                         
                         
                     }
-                }
-//            }
-        }
+                    .id(scrollViewID)
+                    
+                                        .onChange(of: focusedField) { _ in
+                                            // Optionally, scroll to the focused field if needed
+                                            
+                                            if let field = focusedField {
+                                                
+                                                DispatchQueue.main.async {
+                                                    withAnimation {
+                                                        proxy.scrollTo(field, anchor: .top)
+                    
+                                                        if field == .currentPaco2Input{
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                    
+                }//scrollVie proxy
+            }
+        }.background(.white)
+            .onTapGesture {
+                // Dismiss the keyboard when tapping outside of the text fields
+                dismissKeyboard()
+            }
     }
 }
 
@@ -250,137 +469,6 @@ struct CalculatorView: View {
     CalculatorView()
 }
 
-//struct ListItemView: View {
-//    var titleLabel: String
-//    var subTitleLabel: String
-//    var subTitleLabel2: String = ""
-//    var subTitleLabel3: String = ""
-//    var placeHolderlabel: String
-//    var placeHolderlabel2: String = ""
-//    var placeHolderlabel3: String = ""
-//    @Binding var textValue: String
-//    @Binding var textValue2: String
-//    @Binding var textValue3: String
-//    @State var numberOfField: Int = 1
-//    
-//    var body: some View {
-//        
-//        VStack(alignment: .leading) {
-//            Text(titleLabel)
-//                .multilineTextAlignment(.leading)
-//                .font(.subheadline)
-//                .foregroundStyle(.textFieldText)
-//            
-//            if numberOfField == 1 {
-//                Text(subTitleLabel)
-//                    .multilineTextAlignment(.leading)
-//                    .font(.system(size: 13))
-//                    .foregroundStyle(.tealBlue)
-//                InputTextField(placeholder: placeHolderlabel, inputText: $textValue)
-//            } else if numberOfField == 2 {
-//                HStack(spacing: 150) {
-//                    Text(subTitleLabel)
-//                        .multilineTextAlignment(.leading)
-//                        .font(.system(size: 13))
-//                        .foregroundStyle(.tealBlue)
-//                    Text(subTitleLabel2)
-//                        .multilineTextAlignment(.leading)
-//                        .font(.system(size: 13))
-//                        .foregroundStyle(.tealBlue)
-//                }
-//                HStack(spacing: 10) {
-//                    InputTextField(placeholder: placeHolderlabel, inputText: $textValue)
-//                    InputTextField(placeholder: placeHolderlabel2, inputText: $textValue)
-//                }
-//            }else if numberOfField == 3 {
-//                HStack(spacing: 90) {
-//                    Text(subTitleLabel)
-//                        .multilineTextAlignment(.leading)
-//                        .font(.system(size: 13))
-//                        .foregroundStyle(.tealBlue)
-//                    Text(subTitleLabel2)
-//                        .multilineTextAlignment(.leading)
-//                        .font(.system(size: 13))
-//                        .foregroundStyle(.tealBlue)
-//                    Text(subTitleLabel3)
-//                        .multilineTextAlignment(.leading)
-//                        .font(.system(size: 13))
-//                        .foregroundStyle(.tealBlue)
-//                }
-//                HStack(spacing: 10) {
-//                    InputTextField(placeholder: placeHolderlabel, showResponse: false, inputText: $textValue)
-//                    InputTextField(placeholder: placeHolderlabel2, showResponse: false, inputText: $textValue2)
-//                    InputTextField(placeholder: placeHolderlabel3, inputText: $textValue3)
-//                }
-//            }
-//        }
-//        
-//    }
-//}
-//
-//struct InputTextField: View {
-//    var placeholder: String
-//    var showResponse: Bool = true
-//    @Binding var inputText: String
-//    
-//    var body: some View {
-//        ZStack {
-//            RoundedRectangle(cornerRadius: 10)
-//                .fill(Color(.textFieldBackground))
-//                .frame(height: 50)
-//            
-//            TextField(placeholder, text: $inputText)
-//                .foregroundStyle(.textFieldText)
-//                .padding(.horizontal, 15)
-//                .frame(height: 50)
-//                .onChange(of: inputText) { newValue in
-//                    if showResponse {
-//                        if let _ = newValue.firstIndex(of: "."),
-//                           newValue.components(separatedBy: ".").count - 1 > 1 {
-//                            inputText = String(newValue.dropLast())
-//                        }
-//                    }
-//                }
-//        }
-//        .overlay(
-//            RoundedRectangle(cornerRadius: 8)
-//                .stroke(inputText.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1)
-//        )
-//    }
-//}
-//
-//
-//struct ResultText: View {
-//    let result: String
-//    
-//    var body: some View {
-//        Text(result)
-//            .font(.subheadline).fontWeight(.heavy)
-//            .foregroundStyle(.tealBlue)
-//            .frame(maxWidth: .infinity, alignment: .trailing)
-//    }
-//}
-//
-//struct ResultList: View {
-//    let result: [String]
-//    
-//    var body: some View {
-//        VStack(spacing: 10) {
-//            ForEach(result, id: \.self) { dose in
-//                Text(dose)
-//                    .foregroundColor(.blue)
-//                    .frame(maxWidth: .infinity, alignment: .trailing)
-//                Divider()
-//                
-//            }
-//        }
-//        .padding()
-//        .background(.textFieldBackground)
-//        .cornerRadius(10)
-//        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
-//        .transition(.opacity)
-//    }
-//}
 // Functions
 func calPoundsToKilograms(pounds : Float) -> String{
     let kilograms = pounds/2.2
@@ -592,7 +680,7 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 
 
 //struct CalculatorViewOne: View {
-//    
+//
 //    @State private var centimetersInput: String = ""
 //    @State private var weightInput: String = ""
 //    @State private var heightInput: String = ""
@@ -606,7 +694,7 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 //    @State private var strokeVolumeInput: String = ""
 //    @State private var bsaInput: String = ""
 //    @State private var blank: String = ""
-//    
+//
 //    @State private var centimetersToInchesResult: String = ""
 //    @State private var bodySurfaceAreaResult: String = ""
 //    @State private var weightBasedBodySurfaceAreaResult: String = ""
@@ -626,7 +714,7 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 //    @State private var oxygenContentVenousResult: String = ""
 //    @State private var oxygenConsumptionResult: String = ""
 //    @State private var sweepGasResult: String = ""
-//    
+//
 //    @State var textValue = String()
 //    @State var resultString: String = ""
 //    var body: some View {
@@ -656,7 +744,7 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 //                            .padding(.horizontal, 30)
 //                        ResultText(result: "70.5")
 //                            .padding(.horizontal, 30)
-//                        
+//
 //                        //Inches To Centimetres
 //                        ListItemView(titleLabel: "Inches To Centimetres", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $weightInput, textValue2: $blank, textValue3: $blank)
 //                            .padding(.horizontal, 30)
@@ -681,14 +769,14 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 //                                    .padding(.horizontal, 30)
 //                                    .padding(.vertical, 20)
 //                            }
-//                            
+//
 //                        }
 //                        //Centimetres To Inches
 //                        ListItemView(titleLabel: "Centimetres To Inches", subTitleLabel: "lbs", placeHolderlabel: "lbs", textValue: $textValue, textValue2: $blank, textValue3: $blank)
 //                            .padding(.horizontal, 30)
 //                        ResultText(result: "70.5")
 //                            .padding(.horizontal, 30)
-//                        
+//
 //                        //Body Surface Area
 //                        ListItemView(titleLabel: "Body Surface Area", subTitleLabel: "Height", subTitleLabel2: "weight", subTitleLabel3: "weight", placeHolderlabel: "cm", placeHolderlabel2: "kg", placeHolderlabel3: "kg", textValue: $fio2Input, textValue2:$mapInput, textValue3:$pao2Input, numberOfField: 3)
 //                            .padding(.horizontal, 30)
@@ -703,7 +791,7 @@ func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> 
 //                            .padding(.horizontal, 30)
 //                    }
 //                }
-//                
+//
 //            }
 //        }
 //    }

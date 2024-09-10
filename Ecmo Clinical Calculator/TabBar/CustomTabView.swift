@@ -40,9 +40,29 @@ struct TabView: View {
                     selectedTab = image
                 }
             } label: {
-                Image("\(image)\(selectedTab == image ? "" : "_deactive")")
-//                    .offset(y: selectedTab == image ? -5 : 0)
-                    .scaleEffect(selectedTab == image ? 1.2 : 1.0)
+                VStack{
+                    Image("\(image)\(selectedTab == image ? "" : "_deactive")")
+    //                    .offset(y: selectedTab == image ? -5 : 0)
+                        .scaleEffect(selectedTab == image ? 1.2 : 1.0)
+                        .padding(.bottom, 2)
+                    switch image {
+                    case .calculator:
+                        Text("Calculator")
+                            .font(.system(size: 11))
+                            .foregroundColor(selectedTab == image ? Color.tealBlue : Color.tabBarText)
+//                        tabName = "Calculator"
+                    case .cannula:
+                        Text("Canulla Selection")
+                            .font(.system(size: 11))
+                            .foregroundColor(selectedTab == image ? Color.tealBlue : Color.tabBarText)
+                    case .support:
+                        Text("Contact Us")
+                            .font(.system(size: 11))
+                            .foregroundColor(selectedTab == image ? Color.tealBlue : Color.tabBarText)
+                    }
+                    
+                }
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

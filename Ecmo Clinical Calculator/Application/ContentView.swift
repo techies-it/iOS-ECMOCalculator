@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedTab: tabName = .cannula
+    @State var selectedTab: tabName = .calculator
     @State private var isLandscape: Bool = false
     
     var body: some View {
@@ -50,7 +50,7 @@ struct ContentView: View {
         if tab == .support {
             return isLandscape ? Color.clear : Color.tealBlue
         } else {
-            return Color.clear
+            return Color.white
         }
     }
 }
