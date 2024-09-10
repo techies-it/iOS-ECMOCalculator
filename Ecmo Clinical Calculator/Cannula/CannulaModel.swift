@@ -82,41 +82,20 @@ class CannulaModel: ObservableObject{
         }
     }
     
-    @Published var pediatricVANeckDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
+    @Published var pediatricVANeckDictionary: [String: String] = [:]
     
-    @Published var pediatricVAGroinDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
     
-    @Published var pediatricVVDLDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
+    @Published var pediatricVAGroinDictionary: [String: String] = [:]
+
     
-    @Published var adultVANeckDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
+    @Published var pediatricVVDLDictionary: [String: String] = [:]
     
-    @Published var adultVAGroinDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
+    @Published var adultVANeckDictionary: [String: String] = [:]
     
-    @Published var adultVVDLDictionary: [String: String] = [:] {
-        didSet {
-            saveData()
-        }
-    }
+    @Published var adultVAGroinDictionary: [String: String] = [:]
+    
+    
+    @Published var adultVVDLDictionary: [String: String] = [:]
     
     @Published var entryType: String = "Enter Weight" {
         didSet {
@@ -180,6 +159,7 @@ class CannulaModel: ObservableObject{
     
     init() {
 
+        
         self.weightInputCannula = UserDefaults.standard.string(forKey: "weightInputCannula") ?? ""
         self.heightInputCannula = UserDefaults.standard.string(forKey: "heightInputCannula") ?? ""
         
@@ -197,6 +177,8 @@ class CannulaModel: ObservableObject{
         
         //Results
         self.bsaResult = UserDefaults.standard.string(forKey: "bsaResult") ?? ""
+        self.bsaValue = UserDefaults.standard.float(forKey: "bsaValue") ?? 0.0
+
         
         self.pediatricBloodFlow = UserDefaults.standard.float(forKey: "pediatricBloodFlow") ?? 0.0
 
@@ -208,7 +190,6 @@ class CannulaModel: ObservableObject{
         self.adultResultTargetBloodFlowArray = UserDefaults.standard.stringArray(forKey: "adultResultTargetBloodFlowArray") ?? [""]
         self.adultResultHighlightBloodFlow = UserDefaults.standard.integer(forKey: "adultResultHighlightBloodFlow")
         
-//        self.pediatricVANeckDictionary = UserDefaults.standard.dictionary(forKey: "pediatricVANeckDictionary") ?? [String: Any]
         
 
     }
@@ -231,6 +212,8 @@ class CannulaModel: ObservableObject{
         UserDefaults.standard.set(selectedBloodFlow, forKey: "selectedBloodFlow")
         UserDefaults.standard.set(selectedCI, forKey: "selectedCI")
         UserDefaults.standard.set(bsaResult, forKey: "bsaResult")
+        UserDefaults.standard.set(bsaValue, forKey: "bsaValue")
+        
         UserDefaults.standard.set(isBsaResultVisible, forKey: "isBsaResultVisible")
         UserDefaults.standard.set(isBloodFlowVisible, forKey: "isBloodFlowVisible")
         UserDefaults.standard.set(isCIVisible, forKey: "isCIVisible")
@@ -238,14 +221,13 @@ class CannulaModel: ObservableObject{
         UserDefaults.standard.set(isDropDownVisible, forKey: "isDropDownVisible")
         UserDefaults.standard.set(isCannulaListVisible, forKey: "isCannulaListVisible")
         
-//        UserDefaults.standard.set(pediatricVANeckDictionary, forKey: "pediatricVANeckDictionary")
     }
     
     func handleHeightChange() {
         // Logic to handle height change, if required
         if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
             bsaResult = cannulaWeightBsa(weight: weight, height: height).1
-            bsaValue = cannulaWeightBsa(weight: weight, height: height).0
+          
             isBsaResultVisible = true
             isCIVisible = true
             selectedBloodFlow = nil
@@ -366,11 +348,68 @@ class CannulaModel: ObservableObject{
     }
     
     func adultFrs(){
-        
+        bsaValue = targetBloodFlowValue(weight: Float(weightInputCannula)!, height: Float(heightInputCannula)!, cIValues: selectedCI!).0
+        print("Value of bsa Value is \(bsaValue)")
+        adultVANeck()
+        adultVAGroin()
+        adultVVDL()
     }
     
     func adultVANeck(){
-        adultVANeckDictionary[vaNeckFemoralArterialCannula(bsa: bsaValue).0] = vaNeckFemoralArterialCannula(bsa: bsaValue).1
+        let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
+        adultVANeckDictionary[title] = value
+        
+        let (title2, value2) = vaNeckFemoralVenousCannula(bsa: bsaValue)
+        adultVANeckDictionary[title2] = value2
+        
+        let (title3, value3) = arterialHLSCannula15(bsa: bsaValue)
+        adultVANeckDictionary[title3] = value3
+        
+        let (title4, value4) = arterialHLSCannula23(bsa: bsaValue)
+        adultVANeckDictionary[title4] = value4
+        
+        let (title5, value5) = venousHLSCannula15(bsa: bsaValue)
+        adultVANeckDictionary[title5] = value5
+        
+        let (title6, value6) = venousHLSCannula23(bsa: bsaValue)
+        adultVANeckDictionary[title6] = value6
+    }
+    
+    func adultVAGroin(){
+        let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
+        adultVAGroinDictionary[title] = value
+        
+        let (title2, value2) = vaNeckFemoralVenousCannula(bsa: bsaValue)
+        adultVAGroinDictionary[title2] = value2
+        
+        let (title3, value3) = vaGroinMultiStageFemoralVenousCannulae(bsa: bsaValue)
+        adultVAGroinDictionary[title3] = value3
+        
+        let (title4, value4) = vaGroinArterialHLSCannula15(bsa: bsaValue)
+        adultVAGroinDictionary[title4] = value4
+        
+        let (title5, value5) = vaGroinArterialHLSCannula23(bsa: bsaValue)
+        adultVAGroinDictionary[title5] = value5
+        
+        let (title6, value6) = vaGroinVenousHLSCannula23(bsa: bsaValue)
+        adultVAGroinDictionary[title6] = value6
+        
+        let (title7, value7) = vaGroinVenousHLSCannula38(bsa: bsaValue)
+        adultVAGroinDictionary[title7] = value7
+        
+        let (title8, value8) = vaGroinVenousHLSCannula55(bsa: bsaValue)
+        adultVAGroinDictionary[title8] = value8
+        
+        let (title9, value9) = vaGroinEdwardVenousCannula(bsa: bsaValue)
+        adultVAGroinDictionary[title9] = value9
+    }
+    
+    func adultVVDL(){
+        let (title,value) = vvdlDualLumenCatheterAdult(bsa: bsaValue)
+        adultVVDLDictionary[title] = value
+        
+        let (title2, value2) = vvdlCresentLumenECLSCannula(bsa: bsaValue)
+        adultVVDLDictionary[title2] = value2
     }
 }
 

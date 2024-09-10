@@ -115,7 +115,7 @@ struct CannulaView: View {
                                             ForEach(model.CIFlowOptions, id: \.self) { option in
                                                 Button("\(String(format: "%.1f", option))") {
                                                     model.selectedCI = Float(option)
-//                                                    model.highlightAdultBloodFlow(selectedValue: option)
+                                                    model.adultFrs()
                                                     model.isCannulaListVisible = true
                                                 }
                                             }
@@ -210,16 +210,7 @@ struct CannulaView: View {
                                                             Divider()
                                                           }
                                         }.padding(.vertical,7)
-//                                        ForEach(Array(model.CIFlowOptions.enumerated()), id: \.element) { index, item in
-//                                            let (cardiacOutput, tbf) = model.calculateAdultTargetBloodFlow(option: item)
-//                                            Text("\(String(format: "%.1f", option)) C.I. = \(String(format: "%.2f", cardiacOutput)) L/min = \(String(format: "%.2f", tbf)) ml/kg/min")
-//                                                .font(.caption)
-//                                                .foregroundColor(item == model.selectedCI ? .tealBlue : .textFieldText)
-//                                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                            if index < model.CIFlowOptions.count - 1 {
-//                                                Divider()
-//                                            }
-//                                        }.padding(.vertical,7)
+
                                     }.padding(.horizontal, 30)
                                         .background(.textFieldBackground)
                                         .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
@@ -247,26 +238,47 @@ struct CannulaView: View {
                             }
                             .padding(.top, 25)
                             .padding(.bottom, 10)
-    
+                                
                             VStack(spacing: 0){
-    
-                                ForEach(Array(model.pediatricVANeckDictionary.enumerated()), id: \.element.key) { index, element in
-                                    HStack(spacing: 5){
-                                        Text("\(element.key)")
-                                            .font(.caption).multilineTextAlignment(.leading)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\(element.value)")
-                                            .font(.caption).multilineTextAlignment(.trailing)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                if !model.isCIVisible{
+                                    ForEach(Array(model.pediatricVANeckDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.pediatricVANeckDictionary.count - 1 {
+                                            Divider()
+                                        }
                                     }
-    
-                                    if index < model.pediatricVANeckDictionary.count - 1 {
-                                        Divider()
-                                    }
+                                    .padding(.vertical, 7)
                                 }
-                                .padding(.vertical, 7)
+                                else{
+                                    ForEach(Array(model.adultVANeckDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.adultVANeckDictionary.count - 1 {
+                                            Divider()
+                                        }
+                                    }
+                                    .padding(.vertical, 7)
+                                }
+                                
     
                             }.padding(.horizontal, 30)
                                 .background(.textFieldBackground)
@@ -295,24 +307,45 @@ struct CannulaView: View {
                             .padding(.bottom, 10)
     
                             VStack(spacing: 0){
-    
-                                ForEach(Array(model.pediatricVAGroinDictionary.enumerated()), id: \.element.key) { index, element in
-                                    HStack(spacing: 5){
-                                        Text("\(element.key)")
-                                            .font(.caption).multilineTextAlignment(.leading)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\(element.value)")
-                                            .font(.caption).multilineTextAlignment(.trailing)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                if !model.isCIVisible{
+                                    ForEach(Array(model.pediatricVAGroinDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.pediatricVAGroinDictionary.count - 1 {
+                                            Divider()
+                                        }
                                     }
-    
-                                    if index < model.pediatricVAGroinDictionary.count - 1 {
-                                        Divider()
-                                    }
+                                    .padding(.vertical, 7)
                                 }
-                                .padding(.vertical, 7)
+                                else{
+                                    ForEach(Array(model.adultVAGroinDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.adultVAGroinDictionary.count - 1 {
+                                            Divider()
+                                        }
+                                    }
+                                    .padding(.vertical, 7)
+                                }
+                                
     
                             }.padding(.horizontal, 30)
                                 .background(.textFieldBackground)
@@ -340,24 +373,44 @@ struct CannulaView: View {
                             .padding(.bottom, 10)
     
                             VStack(spacing: 0){
-    
-                                ForEach(Array(model.pediatricVVDLDictionary.enumerated()), id: \.element.key) { index, element in
-                                    HStack(spacing: 5){
-                                        Text("\(element.key)")
-                                            .font(.caption).multilineTextAlignment(.leading)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\(element.value)")
-                                            .font(.caption).multilineTextAlignment(.trailing)
-//                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                if !model.isCIVisible{
+                                    ForEach(Array(model.pediatricVVDLDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.pediatricVVDLDictionary.count - 1 {
+                                            Divider()
+                                        }
                                     }
-    
-                                    if index < model.pediatricVVDLDictionary.count - 1 {
-                                        Divider()
-                                    }
+                                    .padding(.vertical, 7)
                                 }
-                                .padding(.vertical, 7)
+                                else{
+                                    ForEach(Array(model.adultVVDLDictionary.enumerated()), id: \.element.key) { index, element in
+                                        HStack(spacing: 5){
+                                            Text("\(element.key)")
+                                                .font(.caption).multilineTextAlignment(.leading)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            Text("\(element.value)")
+                                                .font(.caption).multilineTextAlignment(.trailing)
+    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+        
+                                        if index < model.adultVVDLDictionary.count - 1 {
+                                            Divider()
+                                        }
+                                    }
+                                    .padding(.vertical, 7)
+                                }
     
                             }.padding(.horizontal, 30)
                                 .background(.textFieldBackground)
@@ -397,19 +450,6 @@ func cannulaWeightBsa(weight: Float,height: Float)-> (Float,String){
     let bsaValue = (bsa * 1000)/1000.0
     let bsaString = "BSA \(String(format: "%.3f", bsa))  m\u{00B2}"
     return (bsaValue, bsaString)
-}
-
-func calAdultTargetBloodFlow(weight: Float, height: Float, targetCI: Float)->(Float, Float){
-    let weightPower = pow(weight, 0.425)
-    let heightPower = pow(height, 0.725)
-    let bsa = 0.007184 * weightPower * heightPower
-    
-    let cardiacOutput = targetCI * bsa
-    
-    let targetBloodFlow = (cardiacOutput * 1000)/weight
-    
-//    let result = "\(String(format: "%.1f", targetCI)) C.I. = \(String(format: "%.2f", cardiacOutput)) L/min = \(String(format: "%.2f", target)) ml/kg/min"
-    return (cardiacOutput, targetBloodFlow)
 }
 
 func targetBloodFlowValue(weight: Float,height: Float,cIValues: Float) -> (Float, Float){
