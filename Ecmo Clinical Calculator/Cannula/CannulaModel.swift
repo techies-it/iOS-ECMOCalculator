@@ -76,6 +76,12 @@ class CannulaModel: ObservableObject{
         }
     }
     
+    @Published var bsaValue: Float {
+        didSet {
+            saveData()
+        }
+    }
+    
     @Published var pediatricVANeckDictionary: [String: String] = [:] {
         didSet {
             saveData()
@@ -89,6 +95,24 @@ class CannulaModel: ObservableObject{
     }
     
     @Published var pediatricVVDLDictionary: [String: String] = [:] {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var adultVANeckDictionary: [String: String] = [:] {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var adultVAGroinDictionary: [String: String] = [:] {
+        didSet {
+            saveData()
+        }
+    }
+    
+    @Published var adultVVDLDictionary: [String: String] = [:] {
         didSet {
             saveData()
         }
@@ -220,7 +244,8 @@ class CannulaModel: ObservableObject{
     func handleHeightChange() {
         // Logic to handle height change, if required
         if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
-            bsaResult = cannulaWeightBsa(weight: weight, height: height)
+            bsaResult = cannulaWeightBsa(weight: weight, height: height).1
+            bsaValue = cannulaWeightBsa(weight: weight, height: height).0
             isBsaResultVisible = true
             isCIVisible = true
             selectedBloodFlow = nil
@@ -303,7 +328,8 @@ class CannulaModel: ObservableObject{
       
     func calculateWeightBasedBodySurfaceArea(){
         if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
-            bsaResult = cannulaWeightBsa(weight: weight, height: height)
+            bsaResult = cannulaWeightBsa(weight: weight, height: height).1
+            
             print("here getting \(bsaResult)")
             /*calculateTargetBloodFlow*/()
         }
@@ -341,6 +367,10 @@ class CannulaModel: ObservableObject{
     
     func adultFrs(){
         
+    }
+    
+    func adultVANeck(){
+        adultVANeckDictionary[vaNeckFemoralArterialCannula(bsa: bsaValue).0] = vaNeckFemoralArterialCannula(bsa: bsaValue).1
     }
 }
 

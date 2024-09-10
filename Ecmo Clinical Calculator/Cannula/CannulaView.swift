@@ -390,11 +390,13 @@ func calTargetBloodFlow(weight: Float, option: Float) -> (String, Float) {
     return  (result, bloodFlow)// Placeholder calculation
 }
 
-func cannulaWeightBsa(weight: Float,height: Float)-> String{
+func cannulaWeightBsa(weight: Float,height: Float)-> (Float,String){
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsa = 0.007184 * weightPower * heightPower
-    return "BSA \(String(format: "%.3f", bsa))  m\u{00B2}"
+    let bsaValue = (bsa * 1000)/1000.0
+    let bsaString = "BSA \(String(format: "%.3f", bsa))  m\u{00B2}"
+    return (bsaValue, bsaString)
 }
 
 func calAdultTargetBloodFlow(weight: Float, height: Float, targetCI: Float)->(Float, Float){
