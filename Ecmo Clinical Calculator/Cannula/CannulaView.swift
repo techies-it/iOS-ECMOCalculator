@@ -27,12 +27,13 @@ struct CannulaView: View {
         VStack(spacing: 0) {
             ScrollView{
                 Text("Cannula Selection")
-                    .font(.largeTitle)
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(.titleLabel)
                     .padding(.top, 5)
                     .padding(.bottom, 15)
                 VStack{
                     Text(model.entryType.isEmpty ? "Enter Weight" : model.entryType)
-                        .font(.system(size: 12,weight: .semibold))
+                        .font(.system(size: 13, weight: .medium))
                         .multilineTextAlignment(.leading)
                         .foregroundStyle(.black)
                         .padding(.leading, 5)
@@ -40,11 +41,11 @@ struct CannulaView: View {
                 }
                 VStack(spacing: 0) {
                     GeometryReader { geometry in
-                    HStack(spacing: 5) {
+                    HStack(spacing: 4) {
                         // Weight Input
                         VStack{
                             Text("Weight")
-                                .font(.system(size: 12))
+                                .font(.system(size: 11))
                                 .foregroundStyle(.tealBlue)
                                 .padding(.leading, 5)
                                 .frame(width: (geometry.size.width - 10) / 3, height: 20, alignment: .leading)
@@ -70,7 +71,7 @@ struct CannulaView: View {
                             // Height Input (Visible only if weight > 15)
                             VStack{
                                 Text("Height")
-                                    .font(.system(size: 12))
+                                    .font(.system(size: 11))
                                     .foregroundStyle(.tealBlue)
                                     .padding(.leading, 5)
                                     .frame(width: (geometry.size.width - 10) / 3, height: 20, alignment: .leading)
@@ -100,13 +101,16 @@ struct CannulaView: View {
                             VStack{
 
                                 Text(model.targetType)
-                                    .font(.system(size: 12))
+                                    .font(.system(size: 11,weight: .regular))
                                     .foregroundStyle(.tealBlue)
-                                    .padding(.leading, 5)
-                                    .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width - 10) / 2, height: 20, alignment: .leading)
+                                    .padding(.leading, 3)
+                                    .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width) / 2, height: 20, alignment: .leading)
                                 Menu {
                                     if !model.isHeightVisible {
-                                        Text("TargetBF")
+                                        Text("Target Blood Flow (ml/kg/min)")
+                                            .font(.system(size: 16))
+                                            .foregroundStyle(.tealBlue)
+                                            .multilineTextAlignment(.center)
                                         ForEach(bloodFlowOptions, id: \.self) { option in
                                             Button("\(option)") {
                                                 model.selectedBloodFlow = option
@@ -114,6 +118,10 @@ struct CannulaView: View {
                                             }.multilineTextAlignment(.center)
                                         }
                                     }else{
+                                        Text("Target C.I.")
+                                            .font(.system(size: 16))
+                                            .foregroundStyle(.tealBlue)
+                                            .multilineTextAlignment(.center)
                                         ForEach(CIFlowOptions, id: \.self) { option in
                                             Button("\(String(format: "%.1f", option))") {
                                                 model.selectedCI = option
@@ -125,30 +133,34 @@ struct CannulaView: View {
                                 } label: {
                                     if !model.isHeightVisible {
                                         Text(model.selectedBloodFlow == nil ? "Select" : "\(model.selectedBloodFlow!)")
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 13))
+                                            .foregroundStyle(.tealBlue)
                                             .multilineTextAlignment(.leading)
                                             .padding(.trailing, 60)
                                             .frame(alignment: .leading)
 
                                     }else{
                                         Text(model.selectedCI == nil ? "Select" : "\(String(format: "%.1f", model.selectedCI!))")
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 13))
+                                            .foregroundStyle(.tealBlue)
                                             .padding(.trailing, 20)
 
                                     }
                                     Image(systemName: "chevron.down")
                                         .padding(.leading, 10)
                                         .frame(alignment: .trailing)
+                                        .foregroundStyle(.tealBlue)
                                 }
-                                .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width - 10) / 2, height: 50)
+                                .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width) / 2, height: 50)
                                 .menuStyle(.borderlessButton)
                                 .background(RoundedRectangle(cornerRadius: 8)
-                                    .stroke(model.selectedCI == nil ? Color.gray : Color.blue, lineWidth: 1))
+                                    .stroke(model.selectedCI == nil ? Color.gray : Color.tealBlue, lineWidth: 1))
 
                             }
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 1)
                     }.padding(.bottom, 65)
                     
                         ResultText(result: model.bsaResult)
@@ -159,7 +171,7 @@ struct CannulaView: View {
                         if model.isBloodFlowVisible {
                             // Display Blood Flow Results
                             VStack{
-                                Text("10Kg and Greater Target Blood Flow")
+                                Text("0-15Kg Target Blood Flow")
                                     .foregroundStyle(.black)
                                     .font(.subheadline).multilineTextAlignment(.leading)
                                 
@@ -191,7 +203,7 @@ struct CannulaView: View {
                         if model.isCIVisible {
                             // Display Blood Flow Results
                             VStack{
-                                Text("10Kg and Greater Target Blood Flow")
+                                Text("15Kg and Greater Target Blood Flow")
                                     .foregroundStyle(.black)
                                     .font(.subheadline).multilineTextAlignment(.leading)
                                 
@@ -366,6 +378,11 @@ struct CannulaView: View {
             
         }
         .padding()
+//        .interactiveDismissDisabled(true)
+        .onTapGesture {
+            // Dismiss the keyboard when tapping outside of the text fields
+            dismissKeyboard()
+        }
     }
     
 //    private func handleWeightChange(_ newValue: String, heightValue: String = "") {

@@ -60,7 +60,7 @@ struct ContactUsView: View {
             // Top Section with Title and Logo
             VStack(spacing: 30) {
                 Text("Contact")
-                    .font(.largeTitle)
+                    .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(.titleLabel)
                     .padding(.top, 10)
                     .padding(.bottom, 10)
@@ -71,6 +71,7 @@ struct ContactUsView: View {
                     Image(.phone)
                     Spacer()
                     Text("1-800-874-ECMO(3266)")
+                        .font(.system(size: 16))
                         .foregroundStyle(.white)
                     Spacer()
                 }
@@ -139,6 +140,7 @@ struct ContactOptionView: View {
                 .frame(height: 30, alignment: .leading)
                 .padding(.leading, 20)
             Text(text)
+                .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(.black)
                 .multilineTextAlignment(.leading)
                 .padding(.leading, 10)

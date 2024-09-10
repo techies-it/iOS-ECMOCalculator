@@ -20,55 +20,74 @@ struct ListItemView: View {
     @Binding var textValue2: String
     @Binding var textValue3: String
     @State var numberOfField: Int = 1
-    
+    @FocusState private var focusedField: FocusedField?
+    var scrollIDInt: Int
+    private enum FocusedField {
+            case field1, field2, field3
+        }
+        
     var body: some View {
         
         VStack(alignment: .leading) {
             Text(titleLabel)
                 .multilineTextAlignment(.leading)
-                .font(.subheadline)
+                .font(.system(size: 13))
                 .foregroundStyle(.textFieldText)
             
             if numberOfField == 1 {
                 Text(subTitleLabel)
                     .multilineTextAlignment(.leading)
-                    .font(.system(size: 13))
+                    .font(.system(size: 12))
                     .foregroundStyle(.tealBlue)
-                InputTextField(placeholder: placeHolderlabel, inputText: $textValue)
+                InputTextField(placeholder: placeHolderlabel, inputText: $textValue, scrollID: scrollIDInt)
+                    .focused($focusedField, equals: .field1)
             } else if numberOfField == 2 {
-                HStack(spacing: 150) {
+                HStack(spacing: 5) {
                     Text(subTitleLabel)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: 13))
+                        .font(.system(size: 12))
                         .foregroundStyle(.tealBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
                     Text(subTitleLabel2)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: 13))
+                        .font(.system(size: 12))
                         .foregroundStyle(.tealBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 HStack(spacing: 10) {
-                    InputTextField(placeholder: placeHolderlabel, inputText: $textValue)
-                    InputTextField(placeholder: placeHolderlabel2, inputText: $textValue2)
+                    InputTextField(placeholder: placeHolderlabel, inputText: $textValue, scrollID: scrollIDInt)
+                        .focused($focusedField, equals: .field1)
+                    InputTextField(placeholder: placeHolderlabel2, inputText: $textValue2, scrollID: scrollIDInt)
+                        .focused($focusedField, equals: .field2)
                 }
             }else if numberOfField == 3 {
-                HStack(spacing: 90) {
+                HStack(spacing: 5) {
                     Text(subTitleLabel)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: 13))
+                        .font(.system(size: 12))
                         .foregroundStyle(.tealBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
                     Text(subTitleLabel2)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: 13))
+                        .font(.system(size: 12))
                         .foregroundStyle(.tealBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
                     Text(subTitleLabel3)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: 13))
+                        .font(.system(size: 12))
                         .foregroundStyle(.tealBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 HStack(spacing: 10) {
-                    InputTextField(placeholder: placeHolderlabel, showResponse: false, inputText: $textValue)
-                    InputTextField(placeholder: placeHolderlabel2, showResponse: false, inputText: $textValue2)
-                    InputTextField(placeholder: placeHolderlabel3, inputText: $textValue3)
+                    InputTextField(placeholder: placeHolderlabel, showResponse: false, inputText: $textValue, scrollID: scrollIDInt)
+                        .focused($focusedField, equals: .field1)
+                    InputTextField(placeholder: placeHolderlabel2, showResponse: false, inputText: $textValue2, scrollID: scrollIDInt)
+                        .focused($focusedField, equals: .field2)
+                    InputTextField(placeholder: placeHolderlabel3, inputText: $textValue3, scrollID: scrollIDInt)
+                        .focused($focusedField, equals: .field3)
                 }
             }
         }
@@ -80,7 +99,8 @@ struct InputTextField: View {
     var placeholder: String
     var showResponse: Bool = true
     @Binding var inputText: String
-    
+    @FocusState private var isFocused: Bool
+    var scrollID: Int
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
@@ -88,16 +108,22 @@ struct InputTextField: View {
                 .frame(height: 50)
             
             TextField(placeholder, text: $inputText)
+                .keyboardType(.decimalPad)
+                .font(.system(size: 13))
+                .focused($isFocused)
                 .foregroundStyle(.textFieldText)
                 .padding(.horizontal, 15)
                 .frame(height: 50)
+                .id(scrollID)
                 .onChange(of: inputText) { newValue in
+                    
                     if showResponse {
                         if let _ = newValue.firstIndex(of: "."),
                            newValue.components(separatedBy: ".").count - 1 > 1 {
                             inputText = String(newValue.dropLast())
                         }
                     }
+                    
                 }
         }
         .overlay(
@@ -113,7 +139,7 @@ struct ResultText: View {
     
     var body: some View {
         Text(result)
-            .font(.subheadline).fontWeight(.heavy)
+            .font(.system(size: 13, weight: .heavy))
             .foregroundStyle(.tealBlue)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
@@ -126,7 +152,8 @@ struct ResultList: View {
         VStack(spacing: 10) {
             ForEach(result, id: \.self) { dose in
                 Text(dose)
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.tealBlue)
+                    .font(.system(size: 13, weight: .heavy))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 Divider()
                 
