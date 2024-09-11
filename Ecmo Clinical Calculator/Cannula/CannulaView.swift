@@ -52,7 +52,6 @@ struct CannulaView: View {
                                             model.weightInputCannula = String(newValue.dropLast())
                                         }
                                         model.handleWeightChange()
-                                        print("changing weight")
                                         model.calculateTargetBloodFlow()
                                     
                                     }
