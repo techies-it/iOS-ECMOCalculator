@@ -241,13 +241,13 @@ struct CannulaView: View {
                                 
                             VStack(spacing: 0){
                                 if !model.isCIVisible{
-                                    ForEach(Array(model.pediatricVANeckDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.pediatricVANeckArray.enumerated()), id: \.element) { index, item in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(item)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.pediatricVANeckDictionary[item]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -258,15 +258,16 @@ struct CannulaView: View {
                                         }
                                     }
                                     .padding(.vertical, 7)
+                                   
                                 }
                                 else{
-                                    ForEach(Array(model.adultVANeckDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.adultVANeckArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.adultVANeckDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -308,13 +309,13 @@ struct CannulaView: View {
     
                             VStack(spacing: 0){
                                 if !model.isCIVisible{
-                                    ForEach(Array(model.pediatricVAGroinDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.pediatricVAGroinArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.pediatricVAGroinDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -327,13 +328,13 @@ struct CannulaView: View {
                                     .padding(.vertical, 7)
                                 }
                                 else{
-                                    ForEach(Array(model.adultVAGroinDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.adultVAGroinArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.adultVAGroinDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -374,13 +375,13 @@ struct CannulaView: View {
     
                             VStack(spacing: 0){
                                 if !model.isCIVisible{
-                                    ForEach(Array(model.pediatricVVDLDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.pediatricVVDLArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.pediatricVVDLDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -393,13 +394,13 @@ struct CannulaView: View {
                                     .padding(.vertical, 7)
                                 }
                                 else{
-                                    ForEach(Array(model.adultVVDLDictionary.enumerated()), id: \.element.key) { index, element in
+                                    ForEach(Array(model.adultVVDLArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(element.key)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(element.value)")
+                                            Text("\(model.adultVVDLDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
     //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)

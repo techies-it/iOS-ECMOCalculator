@@ -82,6 +82,14 @@ class CannulaModel: ObservableObject{
         }
     }
     
+    @Published var pediatricVANeckArray : [String] = []
+    @Published var pediatricVAGroinArray : [String] = []
+    @Published var pediatricVVDLArray : [String] = []
+    
+    @Published var adultVANeckArray : [String] = []
+    @Published var adultVAGroinArray : [String] = []
+    @Published var adultVVDLArray : [String] = []
+    
     @Published var pediatricVANeckDictionary: [String: String] = [:]
     
     
@@ -331,20 +339,43 @@ class CannulaModel: ObservableObject{
     }
     
     func pediatricVANeck(){
-       
-        pediatricVANeckDictionary[vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).1
-        pediatricVANeckDictionary[vaNeckVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaNeckVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVANeckDictionary.removeAll()
+        let (title,value) = vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVANeckDictionary[title] = value
+        pediatricVANeckArray.append(title)
         
+        let (title1,value1) = vaNeckVenousCannulae(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVANeckDictionary[title1] = value1
+        pediatricVANeckArray.append(title1)
+
     }
     
     func pediatricVAGroin(){
-        pediatricVAGroinDictionary[vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow).1
-        pediatricVAGroinDictionary[vaGroinVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).0] = vaGroinVenousCannulae(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVAGroinArray.removeAll()
+        let (title,value) = vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVAGroinDictionary[title] = value
+        pediatricVAGroinArray.append(title)
+        let (title1,value1) = vaGroinVenousCannulae(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVAGroinDictionary[title1] = value1
+        pediatricVAGroinArray.append(title1)
+
     }
     
     func pediatricVVDL(){
-        pediatricVVDLDictionary[vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow).0] = vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow).1
-        pediatricVVDLDictionary[vvdlCrescentdualECLSCannula(pediatricBloodFlow: pediatricBloodFlow).0] = vvdlCrescentdualECLSCannula(pediatricBloodFlow: pediatricBloodFlow).1
+        pediatricVVDLArray.removeAll()
+        let (title,value) = vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVVDLDictionary[title] = value
+        pediatricVVDLArray.append(title)
+        let (title1,value1) = vvdlCrescentdualECLSCannula(pediatricBloodFlow: pediatricBloodFlow)
+
+        pediatricVVDLDictionary[title1] = value1
+        pediatricVVDLArray.append(title1)
+
     }
     
     func adultFrs(){
@@ -356,60 +387,80 @@ class CannulaModel: ObservableObject{
     }
     
     func adultVANeck(){
+        adultVANeckArray.removeAll()
         let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
         adultVANeckDictionary[title] = value
-        
+        adultVANeckArray.append(title)
         let (title2, value2) = vaNeckFemoralVenousCannula(bsa: bsaValue)
         adultVANeckDictionary[title2] = value2
-        
+        adultVANeckArray.append(title2)
+
         let (title3, value3) = arterialHLSCannula15(bsa: bsaValue)
         adultVANeckDictionary[title3] = value3
-        
+        adultVANeckArray.append(title3)
+
         let (title4, value4) = arterialHLSCannula23(bsa: bsaValue)
         adultVANeckDictionary[title4] = value4
-        
+        adultVANeckArray.append(title4)
+
         let (title5, value5) = venousHLSCannula15(bsa: bsaValue)
         adultVANeckDictionary[title5] = value5
-        
+        adultVANeckArray.append(title5)
+
         let (title6, value6) = venousHLSCannula23(bsa: bsaValue)
         adultVANeckDictionary[title6] = value6
+        adultVANeckArray.append(title6)
+
     }
     
     func adultVAGroin(){
+        adultVAGroinArray.removeAll()
         let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
         adultVAGroinDictionary[title] = value
-        
+        adultVAGroinArray.append(title)
         let (title2, value2) = vaNeckFemoralVenousCannula(bsa: bsaValue)
         adultVAGroinDictionary[title2] = value2
-        
+        adultVAGroinArray.append(title2)
+
         let (title3, value3) = vaGroinMultiStageFemoralVenousCannulae(bsa: bsaValue)
         adultVAGroinDictionary[title3] = value3
-        
+        adultVAGroinArray.append(title3)
+
         let (title4, value4) = vaGroinArterialHLSCannula15(bsa: bsaValue)
         adultVAGroinDictionary[title4] = value4
-        
+        adultVAGroinArray.append(title4)
+
         let (title5, value5) = vaGroinArterialHLSCannula23(bsa: bsaValue)
         adultVAGroinDictionary[title5] = value5
-        
+        adultVAGroinArray.append(title5)
+
         let (title6, value6) = vaGroinVenousHLSCannula23(bsa: bsaValue)
         adultVAGroinDictionary[title6] = value6
-        
+        adultVAGroinArray.append(title6)
+
         let (title7, value7) = vaGroinVenousHLSCannula38(bsa: bsaValue)
         adultVAGroinDictionary[title7] = value7
-        
+        adultVAGroinArray.append(title7)
+
         let (title8, value8) = vaGroinVenousHLSCannula55(bsa: bsaValue)
         adultVAGroinDictionary[title8] = value8
-        
+        adultVAGroinArray.append(title8)
+
         let (title9, value9) = vaGroinEdwardVenousCannula(bsa: bsaValue)
         adultVAGroinDictionary[title9] = value9
+        adultVAGroinArray.append(title9)
+
     }
     
     func adultVVDL(){
+        adultVVDLArray.removeAll()
         let (title,value) = vvdlDualLumenCatheterAdult(bsa: bsaValue)
         adultVVDLDictionary[title] = value
-        
+        adultVVDLArray.append(title)
         let (title2, value2) = vvdlCresentLumenECLSCannula(bsa: bsaValue)
         adultVVDLDictionary[title2] = value2
+        adultVVDLArray.append(title2)
+
     }
 }
 
