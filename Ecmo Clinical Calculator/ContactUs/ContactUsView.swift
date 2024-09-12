@@ -59,7 +59,7 @@ struct ContactUsView: View {
         VStack(spacing: 0) {
             // Top Section with Title and Logo
             VStack(spacing: 30) {
-                Text("Contact")
+                Text("Contact Us")
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(.titleLabel)
                     .padding(.top, 10)

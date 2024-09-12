@@ -52,7 +52,7 @@ struct TabView: View {
                             .foregroundColor(selectedTab == image ? Color.tealBlue : Color.tabBarText)
 //                        tabName = "Calculator"
                     case .cannula:
-                        Text("Canulla Selection")
+                        Text("Cannula Selection")
                             .font(.system(size: 11))
                             .foregroundColor(selectedTab == image ? Color.tealBlue : Color.tabBarText)
                     case .support:
