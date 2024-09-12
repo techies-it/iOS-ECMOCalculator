@@ -16,7 +16,7 @@ struct CannulaView: View {
             VStack(spacing: 0) {
                 ScrollView{
                     Text("Cannula Selection")
-                        .font(.system(size: 22, weight: .medium))
+                        .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.titleLabel)
                         .padding(.top, 5)
                         .padding(.bottom, 15)

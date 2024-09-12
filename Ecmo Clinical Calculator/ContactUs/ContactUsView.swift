@@ -58,7 +58,7 @@ struct ContactUsView: View {
     var content: some View {
         VStack(spacing: 0) {
             // Top Section with Title and Logo
-            VStack(spacing: 30) {
+            VStack(spacing: 44) {
                 Text("Contact Us")
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(.titleLabel)
@@ -66,14 +66,17 @@ struct ContactUsView: View {
                     .padding(.bottom, 10)
                 Image(.icEcmoLogoSettings)
                 
-                HStack {
-                    Spacer()
+                HStack(spacing: 0) {
+//                    Spacer()
                     Image(.phone)
-                    Spacer()
+                        .frame(width: 50)
+                        .padding(.horizontal,10)
+//                    /*Spacer*/()
                     Text("1-800-874-ECMO(3266)")
+                        .frame(maxWidth:.infinity)
                         .font(.system(size: 16))
                         .foregroundStyle(.white)
-                    Spacer()
+//                    Spacer()
                 }
                 .padding()
                 .background(Color.tealBlue)

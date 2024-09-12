@@ -80,7 +80,11 @@ struct CalculatorView: View {
                             .onChange(of: model.weightInputBsa) { _ in
                                 model.calculateBodySurfaceArea()
                             }
-//                            .id(FocusedField.heightInput)
+                            .onChange(of: model.heightInput) { _ in
+                                            if !model.weightInputBsa.isEmpty {
+                                              model.calculateBodySurfaceArea()
+                                            }
+                                          }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -152,7 +156,7 @@ struct CalculatorView: View {
                             
                             ListItemView(titleLabel: "Heparin Loading Dose", subTitleLabel: "Weight (kg)", placeHolderlabel: "kg", textValue: $model.weightInputHLD, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.weightInputHLD.hashValue)
                                 .padding(.horizontal, 30)
-                                .padding(.bottom, 20)
+                                .padding(.bottom, 7)
                                 
                                 .onChange(of: model.weightInputHLD) { _ in
                                     model.calculateHeparinLoadingDose()
@@ -171,14 +175,14 @@ struct CalculatorView: View {
                                 withAnimation {
                                     ResultList(result: model.heparinLoadingDoseResult)
                                         .padding(.horizontal, 30)
-                                        .padding(.vertical, 20)
+                                        .padding(.vertical, 15)
                                 }
                             }
                             
                             ListItemView(titleLabel: "Cardiac Index Calculator",
                                          subTitleLabel: "BSA", placeHolderlabel: "m\u{00B2}", textValue: $model.bsaInput, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.bsaInput.hashValue)
                             .padding(.horizontal, 30)
-                            .padding(.bottom, 20)
+                            .padding(.bottom, 7)
                             .onChange(of: model.bsaInput) { _ in
                                 model.calculateCardiacIndexCalculator()
                             }
@@ -220,7 +224,7 @@ struct CalculatorView: View {
                             ResultText(result: model.estimatedRedCellMassResult)
                                 .padding(.horizontal, 30)
                             
-                            ListItemView(titleLabel: "Dilutional Hematocrit(HCT)", subTitleLabel: "Weight (kg)", subTitleLabel2: "HCT (%)", subTitleLabel3: "ECLS Circuit Vol. (mL)",
+                            ListItemView(titleLabel: "Dilutional Hematocrit(HCT)", subTitleLabel: "Weight\n (kg)", subTitleLabel2: "HCT\n (%)", subTitleLabel3: "ECLS Circuit Vol. (mL)",
                                          placeHolderlabel: "kg", placeHolderlabel2: "%", placeHolderlabel3: "mL",
                                          textValue: $model.weightInputDilutionalHematorcrit, textValue2: $model.hctInput, textValue3: $model.eclsCircuitVolumeInput, numberOfField: 3, scrollIDInt: FocusedField.weightInputDilutionalHematorcrit.hashValue)
                             .padding(.horizontal, 30)
@@ -404,7 +408,7 @@ struct CalculatorView: View {
                             
                             
                             ListItemView(titleLabel: "Sweep Gas",
-                                         subTitleLabel: "Current (PaCO\u{2082})", subTitleLabel2: "Current (Sweep Flow)", subTitleLabel3: "Desired (PaCO\u{2082})",
+                                         subTitleLabel: "Current\n (PaCO\u{2082})", subTitleLabel2: "Current (Sweep Flow)", subTitleLabel3: "Desired\n (PaCO\u{2082})",
                                          placeHolderlabel: "mmHg", placeHolderlabel2: "L/min", placeHolderlabel3: "mmHg",
                                          textValue: $model.currentPaco2Input, textValue2: $model.sweepFlowInput, textValue3: $model.desiredPaco2Input, numberOfField: 3, scrollIDInt: FocusedField.currentPaco2Input.hashValue)
                             .padding(.horizontal, 30)
