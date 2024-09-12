@@ -28,11 +28,12 @@ struct ListItemView: View {
         
     var body: some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading,spacing: 8) {
             Text(titleLabel)
                 .multilineTextAlignment(.leading)
-                .font(.system(size: 13))
+                .font(.system(size: 13,weight: .bold))
                 .foregroundStyle(.textFieldText)
+//                .padding(.bottom,5)
             
             if numberOfField == 1 {
                 Text(subTitleLabel)

@@ -16,7 +16,7 @@ struct CannulaView: View {
             VStack(spacing: 0) {
                 ScrollView{
                     Text("Cannula Selection")
-                        .font(.system(size: 22, weight: .medium))
+                        .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.titleLabel)
                         .padding(.top, 5)
                         .padding(.bottom, 15)
@@ -343,11 +343,9 @@ struct CannulaView: View {
                                         HStack(spacing: 5){
                                             Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                             Text("\(model.adultVAGroinDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                         }
         
@@ -390,11 +388,9 @@ struct CannulaView: View {
                                         HStack(spacing: 5){
                                             Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                             Text("\(model.pediatricVVDLDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                         }
         
