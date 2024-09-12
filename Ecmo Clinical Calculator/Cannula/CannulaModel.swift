@@ -11,7 +11,7 @@ import SwiftUI
 
 class CannulaModel: ObservableObject{
     
-    @Published var bloodFlowOptions = [100, 150, 175, 200, 250]
+    @Published var bloodFlowOptions : [Int] = [100, 150, 175, 200, 250]
     @Published var CIFlowOptions : [Float] = [0.5, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6,2.8,3.0]
 
     
@@ -82,28 +82,77 @@ class CannulaModel: ObservableObject{
         }
     }
     
-    @Published var pediatricVANeckArray : [String] = []
+    @Published var pediatricVANeckArray : [String] = []{
+        didSet{
+            saveData()
+        }
+    }//["Bio-Medicus NextGen Pediatric Arterial","Bio-Medicus NextGen Pediatric Venous"]
     @Published var pediatricVAGroinArray : [String] = []
-    @Published var pediatricVVDLArray : [String] = []
+    {
+        didSet{
+            saveData()
+        }
+    }
+    @Published var pediatricVVDLArray : [String] = []{
+        didSet{
+            saveData()
+        }
+    }
     
-    @Published var adultVANeckArray : [String] = []
-    @Published var adultVAGroinArray : [String] = []
-    @Published var adultVVDLArray : [String] = []
+    @Published var adultVANeckArray : [String] = []{
+        didSet{
+            saveData()
+        }
+    }
+    @Published var adultVAGroinArray : [String] = []{
+        didSet{
+            saveData()
+        }
+    }
+    @Published var adultVVDLArray : [String] = []{
+        didSet{
+            saveData()
+        }
+    }
     
-    @Published var pediatricVANeckDictionary: [String: String] = [:]
+    @Published var pediatricVANeckDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
     
     
-    @Published var pediatricVAGroinDictionary: [String: String] = [:]
+    @Published var pediatricVAGroinDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
 
     
-    @Published var pediatricVVDLDictionary: [String: String] = [:]
+    @Published var pediatricVVDLDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
     
-    @Published var adultVANeckDictionary: [String: String] = [:]
+    @Published var adultVANeckDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
     
-    @Published var adultVAGroinDictionary: [String: String] = [:]
+    @Published var adultVAGroinDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
     
     
-    @Published var adultVVDLDictionary: [String: String] = [:]
+    @Published var adultVVDLDictionary: [String: String] = [:]{
+        didSet{
+            saveData()
+        }
+    }
     
     @Published var entryType: String = "Enter Weight" {
         didSet {
@@ -229,6 +278,21 @@ class CannulaModel: ObservableObject{
         UserDefaults.standard.set(isDropDownVisible, forKey: "isDropDownVisible")
         UserDefaults.standard.set(isCannulaListVisible, forKey: "isCannulaListVisible")
         
+        UserDefaults.standard.set(pediatricVANeckDictionary, forKey: "pediatricVANeckDictionary")
+        UserDefaults.standard.set(pediatricVAGroinDictionary, forKey: "pediatricVAGroinDictionary")
+        UserDefaults.standard.set(pediatricVVDLDictionary, forKey: "pediatricVVDLDictionary")
+        UserDefaults.standard.set(adultVANeckDictionary, forKey: "adultVANeckDictionary")
+        UserDefaults.standard.set(adultVAGroinDictionary, forKey: "adultVAGroinDictionary")
+        UserDefaults.standard.set(adultVVDLDictionary, forKey: "adultVVDLDictionary")
+
+        UserDefaults.standard.set(pediatricVVDLArray, forKey: "pediatricVVDLArray")
+        UserDefaults.standard.set(pediatricVANeckArray, forKey: "pediatricVANeckArray")
+        UserDefaults.standard.set(pediatricVAGroinArray, forKey: "pediatricVAGroinArray")
+        UserDefaults.standard.set(adultVANeckArray, forKey: "adultVANeckArray")
+        UserDefaults.standard.set(adultVVDLArray, forKey: "adultVVDLArray")
+        UserDefaults.standard.set(adultVAGroinArray, forKey: "adultVAGroinArray")
+
+        
     }
     
     func handleHeightChange() {
@@ -309,7 +373,7 @@ class CannulaModel: ObservableObject{
             if bloodFlowOptions[i] == selectedValue{
                 resultHighlightBloodFlow = i
                 pediatricBloodFlow = calTargetBloodFlow(weight: Float(weightInputCannula)!, option: Float(bloodFlowOptions[i])).1
-
+                print("coming in this function")
                 pediatricFrs()
             }
         }
@@ -332,6 +396,16 @@ class CannulaModel: ObservableObject{
     
     func pediatricFrs(){
         //Call all pediatric list functions here
+        
+        pediatricVAGroinArray.removeAll()
+        pediatricVAGroinDictionary.removeAll()
+        
+        pediatricVANeckArray.removeAll()
+        pediatricVANeckDictionary.removeAll()
+        
+        pediatricVVDLArray.removeAll()
+        pediatricVVDLDictionary.removeAll()
+        
         print("value of pediatric Blood flow is \(pediatricBloodFlow) && \(resultTargetBloodFlow)")
         pediatricVANeck()
         pediatricVAGroin()
@@ -339,7 +413,7 @@ class CannulaModel: ObservableObject{
     }
     
     func pediatricVANeck(){
-        pediatricVANeckDictionary.removeAll()
+        
         let (title,value) = vaNeckArterialCannulae(pediatricBloodFlow: pediatricBloodFlow)
 
         pediatricVANeckDictionary[title] = value
@@ -349,11 +423,10 @@ class CannulaModel: ObservableObject{
 
         pediatricVANeckDictionary[title1] = value1
         pediatricVANeckArray.append(title1)
-
     }
     
     func pediatricVAGroin(){
-        pediatricVAGroinArray.removeAll()
+        
         let (title,value) = vaGroinArterialCannulae(pediatricBloodFlow: pediatricBloodFlow)
 
         pediatricVAGroinDictionary[title] = value
@@ -366,7 +439,7 @@ class CannulaModel: ObservableObject{
     }
     
     func pediatricVVDL(){
-        pediatricVVDLArray.removeAll()
+        
         let (title,value) = vvdlDualLumenCatheter(pediatricBloodFlow: pediatricBloodFlow)
 
         pediatricVVDLDictionary[title] = value
@@ -379,15 +452,25 @@ class CannulaModel: ObservableObject{
     }
     
     func adultFrs(){
+        
         bsaValue = targetBloodFlowValue(weight: Float(weightInputCannula)!, height: Float(heightInputCannula)!, cIValues: selectedCI!).0
         print("Value of bsa Value is \(bsaValue)")
+        adultVANeckArray.removeAll()
+        adultVANeckDictionary.removeAll()
+
+        adultVAGroinArray.removeAll()
+        adultVAGroinDictionary.removeAll()
+
+        adultVVDLArray.removeAll()
+        adultVVDLDictionary.removeAll()
+        
         adultVANeck()
         adultVAGroin()
         adultVVDL()
     }
     
     func adultVANeck(){
-        adultVANeckArray.removeAll()
+      
         let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
         adultVANeckDictionary[title] = value
         adultVANeckArray.append(title)
@@ -410,11 +493,11 @@ class CannulaModel: ObservableObject{
         let (title6, value6) = venousHLSCannula23(bsa: bsaValue)
         adultVANeckDictionary[title6] = value6
         adultVANeckArray.append(title6)
-
+        print(adultVANeckArray)
     }
     
     func adultVAGroin(){
-        adultVAGroinArray.removeAll()
+        
         let (title,value) = vaNeckFemoralArterialCannula(bsa: bsaValue)
         adultVAGroinDictionary[title] = value
         adultVAGroinArray.append(title)
@@ -453,7 +536,7 @@ class CannulaModel: ObservableObject{
     }
     
     func adultVVDL(){
-        adultVVDLArray.removeAll()
+        
         let (title,value) = vvdlDualLumenCatheterAdult(bsa: bsaValue)
         adultVVDLDictionary[title] = value
         adultVVDLArray.append(title)

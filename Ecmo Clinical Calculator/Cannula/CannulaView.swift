@@ -10,7 +10,20 @@ import SwiftUI
 struct CannulaView: View {
    
     @StateObject private var model = CannulaModel()
-    
+    @State private var pdVANeckArray : [String] = ["Bio-Medicus NextGen Pediatric Arterial","Bio-Medicus NextGen Pediatric Venous"]
+//    init(){
+////        let h = model.heightInputCannula
+////        let w = model.weightInputCannula
+////        let sCI = model.selectedCI
+////        let sTBF = model.selectedBloodFlow
+//        
+//        if model.isHeightVisible{
+//            model.adultFrs()
+//        }
+//        else{
+//            
+//        }
+//    }
     
         var body: some View {
             VStack(spacing: 0) {
@@ -178,11 +191,11 @@ struct CannulaView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                                 VStack(spacing: 0){
-    
-                                    ForEach(Array(model.resultTargetBloodFlowArray.enumerated()), id: \.element) { index, item in
-                                        Text("\(item)")
+                                    ForEach(Array(model.bloodFlowOptions.enumerated()), id: \.element) { index, option in
+                                        let resultString = calTargetBloodFlow(weight: Float(model.weightInputCannula) ?? 0.0, option: Float(option)).0
+                                        Text("\(resultString)")
                                             .font(.caption)
-                                            .foregroundColor(index == model.resultHighlightBloodFlow ? .tealBlue : .textFieldText)
+                                            .foregroundColor(option == model.selectedBloodFlow ? .tealBlue : .textFieldText)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                         if index < model.bloodFlowOptions.count - 1 {
                                             Divider()
@@ -219,6 +232,7 @@ struct CannulaView: View {
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                             if index < model.CIFlowOptions.count - 1 {
                                                 Divider()
+                                                
                                             }
                                         }.padding(.vertical,7)
 
@@ -251,16 +265,16 @@ struct CannulaView: View {
                             .padding(.bottom, 10)
                                 
                             VStack(spacing: 0){
+                    
                                 if !model.isCIVisible{
-                                    ForEach(Array(model.pediatricVANeckArray.enumerated()), id: \.element) { index, item in
+
+                                    ForEach(Array(model.pediatricVANeckArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
-                                            Text("\(item)")
+                                            Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            Text("\(model.pediatricVANeckDictionary[item]!)")
+                                            Text("\(model.pediatricVANeckDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                         }
         
@@ -272,15 +286,14 @@ struct CannulaView: View {
                                    
                                 }
                                 else{
+//                                    let _ = model.adultVANeck()
                                     ForEach(Array(model.adultVANeckArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
                                             Text("\(element)")
                                                 .font(.caption).multilineTextAlignment(.leading)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                             Text("\(model.adultVANeckDictionary[element]!)")
                                                 .font(.caption).multilineTextAlignment(.trailing)
-    //                                            .foregroundColor(option == model.selectedCI ? .tealBlue : .textFieldText)
                                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                         }
         
@@ -297,6 +310,15 @@ struct CannulaView: View {
                                 .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
                                 .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
                                 .transition(.opacity)
+                                .onAppear(){
+                                    model.pediatricVANeckArray.removeAll()
+                                    model.pediatricVANeckDictionary.removeAll()
+                                    model.adultVANeckArray.removeAll()
+                                    model.adultVANeckDictionary.removeAll()
+                                    
+                                    model.pediatricVANeck()
+                                    model.adultVANeck()
+                                }
     
                         }
     
@@ -362,6 +384,16 @@ struct CannulaView: View {
                                 .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
                                 .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
                                 .transition(.opacity)
+                                .onAppear(){
+                                    model.adultVAGroinArray.removeAll()
+                                    model.adultVAGroinDictionary.removeAll()
+                                    
+                                    model.pediatricVAGroinArray.removeAll()
+                                    model.pediatricVAGroinDictionary.removeAll()
+                                    
+                                    model.pediatricVAGroin()
+                                    model.adultVAGroin()
+                                }
     
                         }
                         //VVDL Group
@@ -401,6 +433,8 @@ struct CannulaView: View {
                                     .padding(.vertical, 7)
                                 }
                                 else{
+                                    let _ = print(model.bsaValue)
+                                    
                                     ForEach(Array(model.adultVVDLArray.enumerated()), id: \.element) { index, element in
                                         HStack(spacing: 5){
                                             Text("\(element)")
@@ -425,6 +459,16 @@ struct CannulaView: View {
                                 .border(.textFieldBorder, width: 0.5).cornerRadius(10, corners: .allCorners)
                                 .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4)
                                 .transition(.opacity)
+                                .onAppear(){
+                                    model.pediatricVVDLArray.removeAll()
+                                    model.pediatricVVDLDictionary.removeAll()
+                                    
+                                    model.adultVVDLArray.removeAll()
+                                    model.adultVVDLDictionary.removeAll()
+                                    
+                                    model.pediatricVVDL()
+                                    model.adultVVDL()
+                                }
     
                         }
                         Spacer()
@@ -436,6 +480,7 @@ struct CannulaView: View {
     
             }
             .padding()
+            
         }
 
 }
@@ -474,6 +519,7 @@ func targetBloodFlowValue(weight: Float,height: Float,cIValues: Float) -> (Float
  
 
 //pediatric
+
 
 func vaNeckArterialCannulae(pediatricBloodFlow: Float) -> (String,String){
     var calculatedFr = ""
