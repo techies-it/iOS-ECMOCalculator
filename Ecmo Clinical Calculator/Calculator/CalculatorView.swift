@@ -475,37 +475,47 @@ struct CalculatorView: View {
 // Functions
 func calPoundsToKilograms(pounds : Float) -> String{
     let kilograms = pounds/2.2
-    return " \(round(kilograms * 100)/100.0) Kg "
+    return "\(String(format: "%.2f",kilograms)) Kg"
+//    return " \(round(kilograms * 100)/100.0) Kg "
 }
+
 func calKilogramsToPounds(kilograms : Float) -> String{
     let pounds = kilograms * 2.2
-    return " \(round(pounds * 100)/100.0) lbs "
+//    return " \(round(pounds * 100)/100.0) lbs "
+    return "\(String(format: "%.2f", pounds)) lbs"
 }
 func calInchesToCm(inches: Float) -> String{
     let cmValue = inches * 2.54
-    return "\(round(cmValue * 100)/100.0) cm"
+//    return "\(round(cmValue * 100)/100.0) cm"
+    return "\(String(format: "%.2f", cmValue)) cm"
 }
 func calCmToInches(cms: Float) -> String{
     let inchValue = cms/2.54
-    return "\(round(inchValue * 100)/100.0) in"
+//    return "\(round(inchValue * 100)/100.0) in"
+    return "\(String(format: "%.2f", inchValue)) in"
 }
 
 func calBodySurfaceArea(weight: Float, height: Float) -> String{
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsa = 0.007184 * weightPower * heightPower
-    return "\(round(bsa * 100)/100.0) m\u{00B2}"
+//    return "\(round(bsa * 100)/100.0) m\u{00B2}"
+    return "\(String(format: "%.2f", bsa)) m\u{00B2}"
+
 }
 
 func calWeightBsa(weight: Float)-> String{
     let calculatedWeightBSA = ((weight * 4) + 7) / (90 + weight)
-    return "\(round(calculatedWeightBSA * 100)/100.0)  m\u{00B2}"
+    return "\(String(format: "%.2f", calculatedWeightBSA)) m\u{00B2}"
+
+//    return "\(round(calculatedWeightBSA * 100)/100.0)  m\u{00B2}"
 }
 
 func calOxygenIndex(mapValue: Float, fio2: Float, pao2: Float) -> String{
     
     let oxygenIndexValue =  ((mapValue * (fio2 / 100)) / pao2) * 100
-    return "\(round(oxygenIndexValue*10)/10.0)"
+    return "\(String(format: "%.1f", oxygenIndexValue))"
+//    return "\(round(oxygenIndexValue*10)/10.0)"
 }
 
 func calPao2fio2Ratio(pao2: Float, fio2: Float) -> String{
@@ -514,13 +524,14 @@ func calPao2fio2Ratio(pao2: Float, fio2: Float) -> String{
 }
 
 func calHeparingLoadingDose(weight: Float) -> [String]{
-    let loadingDoseArray: [Int] = [25,50,75,100,200,300,400]
+    let loadingDoseArray : [Float] = [25.0,50.0,75.0,100.0,200.0,300.0,400.0]
     var doseArray: [String] = []
-    var doseArrayValue = 0
+    var doseArrayValue : Float = 0.0
     
     for number in loadingDoseArray{
-        doseArrayValue = number * Int(weight)
-        doseArray.append("\(number)u/Kg = \(doseArrayValue) units")
+        doseArrayValue = number * weight
+        let _ = print(doseArrayValue)
+        doseArray.append("\(Int(number))u/Kg = \(doseArrayValue) units")
     }
     return doseArray
 }
