@@ -641,6 +641,7 @@ class CalculatorModel: ObservableObject {
     func calculateHeparinLoadingDose() {
         if let weight = Float(weightInputHLD) {
             heparinLoadingDoseResult = calHeparingLoadingDose(weight: weight)
+            
             withAnimation(.linear(duration: 0.4)) {
                 showHeparinList = true
             }
