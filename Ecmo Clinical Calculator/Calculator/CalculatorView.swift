@@ -645,55 +645,85 @@ struct CalculatorView: View {
     CalculatorView()
 }
 
+// Function to format the number with comma separators and variable decimal places
+func formatNumber(_ value: Float, decimalPlaces: Int) -> String {
+    // Check if the number is a whole number (no fractional part)
+    if value == floor(value) {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0  // No decimals for whole numbers
+        formatter.maximumFractionDigits = 0  // No decimals for whole numbers
+        
+        return formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
+    } else {
+        // Format the value with the specified number of decimal places
+        let formatString = "%.\(decimalPlaces)f"  // Create the format string dynamically
+        let number = String(format: formatString, value)
+        
+        // Adding commas to the formatted number
+        if let doubleValue = Double(number) {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = decimalPlaces  // Ensures the specified decimal places
+            formatter.maximumFractionDigits = decimalPlaces
+            
+            return formatter.string(from: NSNumber(value: doubleValue)) ?? number
+        }
+        
+        return number
+    }
+}
+
+
 // Functions
 func calPoundsToKilograms(pounds : Float) -> String{
     let kilograms = pounds/2.2
-    return "\(String(format: "%.2f",kilograms)) Kg"
-//    return " \(round(kilograms * 100)/100.0) Kg "
+    let kiloResult = formatNumber(kilograms, decimalPlaces: 2)
+    return "\(kiloResult) Kg"
 }
 
 func calKilogramsToPounds(kilograms : Float) -> String{
     let pounds = kilograms * 2.2
-//    return " \(round(pounds * 100)/100.0) lbs "
-    return "\(String(format: "%.2f", pounds)) lbs"
+    let poundResult = formatNumber(pounds, decimalPlaces: 2)
+    return "\(poundResult) lbs"
 }
 func calInchesToCm(inches: Float) -> String{
     let cmValue = inches * 2.54
-//    return "\(round(cmValue * 100)/100.0) cm"
-    return "\(String(format: "%.2f", cmValue)) cm"
+    let cmResult = formatNumber(cmValue, decimalPlaces: 2)
+    return "\(cmResult) cm"
 }
 func calCmToInches(cms: Float) -> String{
     let inchValue = cms/2.54
-//    return "\(round(inchValue * 100)/100.0) in"
-    return "\(String(format: "%.2f", inchValue)) in"
+    let inchResult = formatNumber(inchValue, decimalPlaces: 2)
+    return "\(inchResult) in"
 }
 
 func calBodySurfaceArea(weight: Float, height: Float) -> String{
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsa = 0.007184 * weightPower * heightPower
-//    return "\(round(bsa * 100)/100.0) m\u{00B2}"
-    return "\(String(format: "%.2f", bsa)) m\u{00B2}"
+    let bsaResult = formatNumber(bsa, decimalPlaces: 2)
+    return "\(bsaResult) m\u{00B2}"
 
 }
 
 func calWeightBsa(weight: Float)-> String{
     let calculatedWeightBSA = ((weight * 4) + 7) / (90 + weight)
-    return "\(String(format: "%.2f", calculatedWeightBSA)) m\u{00B2}"
-
-//    return "\(round(calculatedWeightBSA * 100)/100.0)  m\u{00B2}"
+    let calculatedWeightBSAResult = formatNumber(calculatedWeightBSA, decimalPlaces: 2)
+    return "\(calculatedWeightBSAResult) m\u{00B2}"
 }
 
 func calOxygenIndex(mapValue: Float, fio2: Float, pao2: Float) -> String{
     
     let oxygenIndexValue =  ((mapValue * (fio2 / 100)) / pao2) * 100
-    return "\(String(format: "%.1f", oxygenIndexValue))"
-//    return "\(round(oxygenIndexValue*10)/10.0)"
+    let oiResult = formatNumber(oxygenIndexValue, decimalPlaces: 1)
+    return "\(oiResult)"
 }
 
 func calPao2fio2Ratio(pao2: Float, fio2: Float) -> String{
     let ratio = (pao2 / (fio2 / 100))
-    return "\(String(format: "%.0f", ratio))"
+    let ratioResult = formatNumber(ratio, decimalPlaces: 0)
+    return "\(ratioResult)"
 }
 
 func calHeparingLoadingDose(weight: Float) -> [String]{
@@ -703,8 +733,8 @@ func calHeparingLoadingDose(weight: Float) -> [String]{
     
     for number in loadingDoseArray{
         doseArrayValue = number * weight
-        let _ = print(doseArrayValue)
-        doseArray.append("\(Int(number))u/Kg = \(doseArrayValue) units")
+        let doseResult = formatNumber(doseArrayValue, decimalPlaces: 2)
+        doseArray.append("\(Int(number))u/Kg = \(doseResult) units")
     }
     return doseArray
 }
@@ -717,53 +747,65 @@ func calCardiacIndexCalculator(bsa: Float) -> [String]{
     
     for number in ciArray{
         calculatedValue = number * Double(bsa)
-        resultCIArray.append("CI \(number) = \(String(format: "%.2f", calculatedValue)) L/min")
+        let result = formatNumber(Float(calculatedValue), decimalPlaces: 2)
+        resultCIArray.append("CI \(number) = \(result) L/min")
     }
     return resultCIArray
 }
 func calEstimatedRedCellMass(weight: Float, hematocrit: Float) -> String {
     let resultERCM = (weight * 75 * (hematocrit / 100))
-    return "\(String(format: "%.2f", resultERCM)) mL"
+    let result = formatNumber(resultERCM, decimalPlaces: 2)
+    return "\(result) mL"
 }
 func calDilutionalHematocrit(weight: Float, hct: Float, circuitVol: Float) -> String{
     let resultDilHematocrit = (((weight * 75) * (hct / 100)) / (circuitVol + (weight * 75))) * 100
-    return "\(String(format: "%.1f", resultDilHematocrit)) %"
+    let dhResult = formatNumber(resultDilHematocrit, decimalPlaces: 1)
+    return "\(dhResult) %"
 }
 func calCardiacOutput(heartRate: Float, strokeVol: Float) -> String{
     let resultCardiacOutput = (heartRate * strokeVol) / 1000.0
-    return "\(String(format: "%.2f", resultCardiacOutput)) L/min"
+    let coResult = formatNumber(resultCardiacOutput, decimalPlaces: 2)
+    return "\(coResult) L/min"
 }
 func calCardiacIndex(cardiacOutput: Float, bsa: Float) -> String{
     let resultCardiacIndex = cardiacOutput/bsa
-    return "\(String(format: "%.1f", resultCardiacIndex)) L/min/m\u{00B2}"
+    let ciResult = formatNumber(resultCardiacIndex, decimalPlaces: 1)
+    return "\(ciResult) L/min/m\u{00B2}"
 }
 func calSystemicVascularResistance(mapValue: Float, cvp: Float, cardiacOutput: Float)-> String{
     let vascularResistance = ((mapValue - cvp)/cardiacOutput) * 80
-    return "\(String(format: "%.0f", vascularResistance)) Dynes-sec/cm\u{2075}"
+    let vrResult = formatNumber(vascularResistance, decimalPlaces: 0)
+    return "\(vrResult) Dynes-sec/cm\u{2075}"
 }
 func calPulmonaryVascularResistance(mpap: Float, pcwp: Float, cardiacOutput: Float) -> String{
     let vascularResistance = ((mpap - pcwp) / cardiacOutput) * 80
-    return "\(String(format: "%.0f", vascularResistance)) Dynes-sec/cm\u{2075}"
+    let pvrResult = formatNumber(vascularResistance, decimalPlaces: 0)
+    return "\(pvrResult) Dynes-sec/cm\u{2075}"
 }
 func calOxygenContentArterial(hgb: Float, sao2: Float, pao2: Float) -> String{
     let resultArterialOC = (hgb * 1.34 * (sao2 / 100)) + (pao2 * 0.003)
-    return "\(String(format: "%.0f", resultArterialOC)) mL/dL"
+    let aocResult = formatNumber(resultArterialOC, decimalPlaces: 0)
+    return "\(aocResult) mL/dL"
 }
 func calOxygenDelivery(co: Float, cao2: Float) -> String{
     let resultDo2 = (co * cao2) * 10
-    return "\(String(format: "%.0f", resultDo2)) mL/min"
+    let result = formatNumber(resultDo2, decimalPlaces: 0)
+    return "\(result) mL/min"
 }
 func calOxygenContentVenous(hgb: Float, svo2: Float, pvo2: Float)-> String{
     let resultContent = (hgb * 1.34 * (svo2 / 100)) + (pvo2 * 0.003)
-    return "\(String(format: "%.2f", resultContent)) mL/dL"
+    let result = formatNumber(resultContent, decimalPlaces: 2)
+    return "\(result) mL/dL"
 }
 func calOxygenConsumption(co: Float, cao2cvo2: Float) -> String{
     let oxygenConsumption = (co * cao2cvo2) * 10
-    return "\(String(format: "%.0f", oxygenConsumption)) mL/min"
+    let ocResult = formatNumber(oxygenConsumption, decimalPlaces: 0)
+    return "\(ocResult) mL/min"
 }
 func calSweepGas(currentPaco2: Float, sweepFlow: Float,desiredPaco2: Float ) -> String{
     let sweepGas = (currentPaco2 * sweepFlow) / desiredPaco2
-    return "\(String(format: "%.1f", sweepGas)) L/min"
+    let sweepGasResult = formatNumber(sweepGas, decimalPlaces: 1)
+    return "\(sweepGasResult) L/min"
 }
 //func calBodySurfaceArea(weight: Double, height: Double) -> String {
 //    let heightPower = pow(height, 0.725)
