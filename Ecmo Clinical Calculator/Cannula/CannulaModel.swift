@@ -198,12 +198,12 @@ class CannulaModel: ObservableObject{
         }
     }
    
-    @Published var selectedBloodFlow: Int? {
+    @Published var selectedBloodFlow: Int = 0 {
         didSet {
             saveData()
         }
     }
-    @Published var selectedCI: Float? {
+    @Published var selectedCI: Float = 0.0 {
         didSet {
             saveData()
         }
@@ -297,53 +297,87 @@ class CannulaModel: ObservableObject{
     
     func handleHeightChange() {
         // Logic to handle height change, if required
-        if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
-            bsaResult = cannulaWeightBsa(weight: weight, height: height).1
-          
-            isBsaResultVisible = true
-            isCIVisible = true
-            selectedBloodFlow = nil
-
-
-        }else{
-            bsaResult = " "
-            isBsaResultVisible = false
-            isCIVisible = false
-            isCannulaListVisible = false
-            selectedCI = nil
+        withAnimation(.linear(duration: 0.4)) {
+            if let weight = Float(weightInputCannula), let height = Float(heightInputCannula){
+                bsaResult = cannulaWeightBsa(weight: weight, height: height).1
+                
+                isBsaResultVisible = true
+                isCIVisible = true
+                selectedBloodFlow = 0
+//                selectedCI = 0.0
+                if isCannulaListVisible {
+                    adultFrs()
+                }
+            }else{
+                bsaResult = " "
+                isBsaResultVisible = false
+                isCIVisible = false
+                isCannulaListVisible = false
+                selectedCI = 0.0
+            }
         }
     }
     
     func handleWeightChange() {
         guard let weightValue = Double(weightInputCannula) else {
-            isHeightVisible = false
-            isBloodFlowVisible = false
-            isCIVisible = false
-            isCannulaListVisible = false
-            selectedBloodFlow = nil
+            withAnimation(.linear(duration: 0.4)) {
+//                if !self.heightInputCannula.isEmpty{
+                    isHeightVisible = false
+                    isBloodFlowVisible = false
+                    isCIVisible = false
+                    isCannulaListVisible = false
+//                    selectedBloodFlow = 0
+                    isDropDownVisible = false
+                    self.heightInputCannula = ""
+//                }
+            }
             return
         }
         
         if weightValue <= 15 {//Pediatric
-            isHeightVisible = false
-            isDropDownVisible = true
-            isBloodFlowVisible = true
-            isCIVisible = false
-            selectedBloodFlow = nil
-            targetType = "Target Blood Flow (ml/kg/min)"
-            bsaResult = " "
-            entryType = "Pediatric Entry"
+            withAnimation(.linear(duration: 0.4)) {
+                isHeightVisible = false
+                isDropDownVisible = true
+                isBloodFlowVisible = true
+                isCIVisible = false
+                selectedBloodFlow = 0
+                targetType = "Target Blood Flow (ml/kg/min)"
+                isBsaResultVisible = false
+                entryType = "Pediatric Entry"
+                if selectedBloodFlow <= 0 {
+                    isCannulaListVisible = false
+                }else{
+                    isCannulaListVisible = true
+                }
+            }
         } else { //Adult
-            isHeightVisible = true
-            isDropDownVisible = true
-            isBloodFlowVisible = false
-            selectedCI = nil
-            targetType = "Target C.I."
-            entryType = "Adult Entry"
+            withAnimation(.linear(duration: 0.4)) {
+                isHeightVisible = true
+                isDropDownVisible = true
+                isBloodFlowVisible = false
+                selectedCI = 0
+                targetType = "Target C.I."
+                entryType = "Adult Entry"
+                handleHeightChange()
+                if heightInputCannula.isEmpty {
+                        isCannulaListVisible = false
+//                        isCIVisible = false
+//                    isBsaResultVisible = false
+
+                }else{
+                    if selectedCI <= 0.0 {
+                        isCannulaListVisible = false
+                    }else{
+                        isCannulaListVisible = true
+                    }
+//                    isBsaResultVisible = true
+//                    isCIVisible = true
+
+
+                }
+            }
         }
-        if heightInputCannula.isEmpty {
-            isCannulaListVisible = false
-        }
+        
     }
 
     
@@ -452,21 +486,22 @@ class CannulaModel: ObservableObject{
     }
     
     func adultFrs(){
-        
-        bsaValue = targetBloodFlowValue(weight: Float(weightInputCannula)!, height: Float(heightInputCannula)!, cIValues: selectedCI!).0
-        print("Value of bsa Value is \(bsaValue)")
-        adultVANeckArray.removeAll()
-        adultVANeckDictionary.removeAll()
-
-        adultVAGroinArray.removeAll()
-        adultVAGroinDictionary.removeAll()
-
-        adultVVDLArray.removeAll()
-        adultVVDLDictionary.removeAll()
-        
-        adultVANeck()
-        adultVAGroin()
-        adultVVDL()
+        if !heightInputCannula.isEmpty {
+            bsaValue = targetBloodFlowValue(weight: Float(weightInputCannula)!, height: Float(heightInputCannula)!, cIValues: selectedCI).0
+            print("Value of bsa Value is \(bsaValue)")
+            adultVANeckArray.removeAll()
+            adultVANeckDictionary.removeAll()
+            
+            adultVAGroinArray.removeAll()
+            adultVAGroinDictionary.removeAll()
+            
+            adultVVDLArray.removeAll()
+            adultVVDLDictionary.removeAll()
+            
+            adultVANeck()
+            adultVAGroin()
+            adultVVDL()
+        }
     }
     
     func adultVANeck(){

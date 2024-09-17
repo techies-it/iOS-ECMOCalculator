@@ -37,7 +37,10 @@ struct CalculatorView: View {
                                 .padding(.horizontal, 30)
                                 .focused($focusedField, equals: .weightInputLbs)
                                 .onChange(of: model.weightInputLbs) { _ in
-                                    model.calculatePoundsToKg()
+                                    withAnimation(.linear(duration: 0.3)) {
+                                        model.calculatePoundsToKg()
+                                    }
+                                    
                                 }
                             ResultText(result: model.poundsToKgResult)
                                 .padding(.horizontal, 30)
@@ -46,7 +49,10 @@ struct CalculatorView: View {
                                 .padding(.horizontal, 30)
                                 .focused($focusedField, equals: .weightInputKg)
                                 .onChange(of: model.weightInputKg) { _ in
-                                    model.calculateKgToPounds()
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateKgToPounds()
+                                    }
+                                    
                                 }
                             ResultText(result: model.kgToPoundsResult)
                                 .padding(.horizontal, 30)
@@ -55,7 +61,9 @@ struct CalculatorView: View {
                                 .padding(.horizontal, 30)
                                 .focused($focusedField, equals: .inchesInput)
                                 .onChange(of: model.inchesInput) { _ in
-                                    model.calculateInchesToCentimeters()
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateInchesToCentimeters()
+                                    }
                                 }
                             ResultText(result: model.inchesToCentimetersResult)
                                 .padding(.horizontal, 30)
@@ -64,7 +72,9 @@ struct CalculatorView: View {
                                 .padding(.horizontal, 30)
                                 .focused($focusedField, equals: .centimetersInput)
                                 .onChange(of: model.centimetersInput) { _ in
-                                    model.calculateCentimetersToInches()
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateCentimetersToInches()
+                                    }
                                 }
                             ResultText(result: model.centimetersToInchesResult)
                                 .padding(.horizontal, 30)
@@ -78,11 +88,15 @@ struct CalculatorView: View {
                             .focused($focusedField, equals: .weightInputLbs)
                             .focused($focusedField, equals: .heightInput)
                             .onChange(of: model.weightInputBsa) { _ in
-                                model.calculateBodySurfaceArea()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateBodySurfaceArea()
+                                }
                             }
                             .onChange(of: model.heightInput) { _ in
                                             if !model.weightInputBsa.isEmpty {
-                                              model.calculateBodySurfaceArea()
+                                                withAnimation(.linear(duration: 0.3)) {
+                                                    model.calculateBodySurfaceArea()
+                                                }
                                             }
                                           }
                             .onTapGesture {
@@ -100,7 +114,9 @@ struct CalculatorView: View {
                             ListItemView(titleLabel: "Weight Based Body Surface Area", subTitleLabel: "Weight (kg)", placeHolderlabel: "kg", textValue: $model.weightInputBbsa, textValue2: $model.blank, textValue3: $model.blank, scrollIDInt: FocusedField.weightInputBbsa.hashValue)
                                 .padding(.horizontal, 30)
                                 .onChange(of: model.weightInputBbsa) { _ in
-                                    model.calculateWeightBasedBodySurfaceArea()
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateWeightBasedBodySurfaceArea()
+                                    }
                                 }
                                 
                                 .onTapGesture {
@@ -118,9 +134,24 @@ struct CalculatorView: View {
                             ListItemView(titleLabel: "Oxygen Index", subTitleLabel: "MAP", subTitleLabel2: "FiO\u{2082}", subTitleLabel3: "PaO\u{2082}", placeHolderlabel: "cmH\u{2082}O", placeHolderlabel2: "%", placeHolderlabel3: "PaO\u{2082}", textValue: $model.mapInputOI, textValue2: $model.fio2InputOI, textValue3: $model.pao2InputOI, numberOfField: 3, scrollIDInt: FocusedField.mapInputOI.hashValue)
                                 .padding(.horizontal, 30)
                                 .onChange(of: model.pao2InputOI) { _ in
-                                    model.calculateOxygenIndex()
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenIndex()
+                                    }
                                 }
-//                                .id(FocusedField.mapInputOI)
+                                .onChange(of: model.mapInputOI) { _ in
+                                    if !model.pao2InputOI.isEmpty && !model.fio2InputOI.isEmpty{
+                                        withAnimation(.linear(duration: 0.2)) {
+                                            model.calculateOxygenIndex()
+                                        }
+                                    }
+                                }
+                                .onChange(of: model.fio2InputOI) { _ in
+                                    if !model.pao2InputOI.isEmpty && !model.mapInputOI.isEmpty{
+                                        withAnimation(.linear(duration: 0.2)) {
+                                            model.calculateOxygenIndex()
+                                        }
+                                    }
+                                }
                                 .onTapGesture {
                                     DispatchQueue.main.async {
                                         withAnimation {
@@ -138,9 +169,17 @@ struct CalculatorView: View {
                                          placeHolderlabel: "mmHg", placeHolderlabel2: "%",  textValue: $model.pao2InputRatio, textValue2: $model.fio2InputRatio, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.pao2InputRatio.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.fio2InputRatio) { _ in
-                                model.calculatePao2Fio2Ratio()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculatePao2Fio2Ratio()
+                                }
                             }
-//                            .id(FocusedField.pao2InputRatio)
+                            .onChange(of: model.pao2InputRatio) { _ in
+                                if !model.fio2InputRatio.isEmpty {
+                                    withAnimation(.linear(duration: 0.3)) {
+                                        model.calculatePao2Fio2Ratio()
+                                    }
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -209,9 +248,17 @@ struct CalculatorView: View {
                                          placeHolderlabel: "kg", placeHolderlabel2: "%",  textValue: $model.weightInputERCM, textValue2: $model.hematocritInputERCM, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.weightInputERCM.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.hematocritInputERCM) { _ in
-                                model.calculateEstimatedRedCellMass()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateEstimatedRedCellMass()
+                                }
                             }
-//                            .id(FocusedField.weightInputERCM)
+                            .onChange(of: model.weightInputERCM) { _ in
+                                if !model.hematocritInputERCM.isEmpty {
+                                    withAnimation(.linear(duration: 0.3)) {
+                                        model.calculateEstimatedRedCellMass()
+                                    }
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -229,9 +276,24 @@ struct CalculatorView: View {
                                          textValue: $model.weightInputDilutionalHematorcrit, textValue2: $model.hctInput, textValue3: $model.eclsCircuitVolumeInput, numberOfField: 3, scrollIDInt: FocusedField.weightInputDilutionalHematorcrit.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.eclsCircuitVolumeInput) { _ in
-                                model.calculateDilutionalHematocrit()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateDilutionalHematocrit()
+                                }
                             }
-//                            .id(FocusedField.weightInputDilutionalHematorcrit)
+                            .onChange(of: model.weightInputDilutionalHematorcrit) { _ in
+                                if !model.eclsCircuitVolumeInput.isEmpty && !model.hctInput.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateDilutionalHematocrit()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.hctInput) { _ in
+                                if !model.eclsCircuitVolumeInput.isEmpty && !model.weightInputDilutionalHematorcrit.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateDilutionalHematocrit()
+                                    }
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -248,9 +310,17 @@ struct CalculatorView: View {
                                          placeHolderlabel: "B/min", placeHolderlabel2: "mL",  textValue: $model.heartRateInput, textValue2: $model.strokeVolumeInput, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.heartRateInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.strokeVolumeInput) { _ in
-                                model.calculateCardiacOutput()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateCardiacOutput()
+                                }
                             }
-//                            .id(FocusedField.heartRateInput)
+                            .onChange(of: model.heartRateInput) { _ in
+                                if !model.strokeVolumeInput.isEmpty {
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateCardiacOutput()
+                                    }
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -269,7 +339,16 @@ struct CalculatorView: View {
                                          textValue: $model.cardiacOutputInput, textValue2: $model.cardiacIndexBsaInput, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.cardiacOutputInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cardiacIndexBsaInput) { _ in
-                                model.calculateCardiacIndex()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateCardiacIndex()
+                                }
+                            }
+                            .onChange(of: model.cardiacOutputInput) { _ in
+                                if !model.cardiacIndexBsaInput.isEmpty {
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateCardiacIndex()
+                                    }
+                                }
                             }
 //                            .id(FocusedField.cardiacOutputInput)
                             .onTapGesture {
@@ -288,10 +367,25 @@ struct CalculatorView: View {
                                          placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
                                          textValue: $model.mapValueSVRInput, textValue2: $model.cvpSVRInput, textValue3: $model.cardiacOutputInputSVR, numberOfField: 3, scrollIDInt: FocusedField.mapValueSVRInput.hashValue)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.cardiacOutputInputSVR) { _ in
-                                model.calculateSystemicVascularResistance()
+                            .onChange(of: model.mapValueSVRInput) { _ in
+                                if !model.cvpSVRInput.isEmpty && !model.cardiacOutputInputSVR.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateSystemicVascularResistance()
+                                    }
+                                }
                             }
-//                            .id(FocusedField.mapValueSVRInput)
+                            .onChange(of: model.cvpSVRInput) { _ in
+                                if !model.mapValueSVRInput.isEmpty && !model.cardiacOutputInputSVR.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateSystemicVascularResistance()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.cardiacOutputInputSVR) { _ in
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateSystemicVascularResistance()
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -308,8 +402,24 @@ struct CalculatorView: View {
                                          placeHolderlabel: "mmHg", placeHolderlabel2: "mmHg", placeHolderlabel3: "L/min",
                                          textValue: $model.mpapInput, textValue2: $model.pcwpInput, textValue3: $model.cardiacOutputPVR, numberOfField: 3, scrollIDInt: FocusedField.mpapInput.hashValue)
                             .padding(.horizontal, 30)
+                            .onChange(of: model.mpapInput) { _ in
+                                if !model.pcwpInput.isEmpty && !model.cardiacOutputPVR.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculatePulmonaryVascularResistance()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.pcwpInput) { _ in
+                                if !model.mpapInput.isEmpty && !model.cardiacOutputPVR.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculatePulmonaryVascularResistance()
+                                    }
+                                }
+                            }
                             .onChange(of: model.cardiacOutputPVR) { _ in
-                                model.calculatePulmonaryVascularResistance()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculatePulmonaryVascularResistance()
+                                }
                             }
 //                            .id(FocusedField.mpapInput)
                             .onTapGesture {
@@ -328,8 +438,24 @@ struct CalculatorView: View {
                                          placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
                                          textValue: $model.hgbInput, textValue2: $model.sao2Input, textValue3: $model.pao2OCAInput, numberOfField: 3, scrollIDInt: FocusedField.hgbInput.hashValue)
                             .padding(.horizontal, 30)
+                            .onChange(of: model.hgbInput) { _ in
+                                if !model.sao2Input.isEmpty && !model.pao2OCAInput.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenContentArterial()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.sao2Input) { _ in
+                                if !model.hgbInput.isEmpty && !model.pao2OCAInput.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenContentArterial()
+                                    }
+                                }
+                            }
                             .onChange(of: model.pao2OCAInput) { _ in
-                                model.calculateOxygenContentArterial()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateOxygenContentArterial()
+                                }
                             }
 //                            .id(FocusedField.hgbInput)
                             .onTapGesture {
@@ -350,9 +476,17 @@ struct CalculatorView: View {
                                          textValue: $model.coODInput, textValue2: $model.cao2Input, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.coODInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cao2Input) { _ in
-                                model.calculateOxygenDelivery()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateOxygenDelivery()
+                                }
                             }
-//                            .id(FocusedField.coODInput)
+                            .onChange(of: model.coODInput) { _ in
+                                if !model.cao2Input.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenDelivery()
+                                    }
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -369,10 +503,25 @@ struct CalculatorView: View {
                                          placeHolderlabel: "g/dL", placeHolderlabel2: "%", placeHolderlabel3: "mmHg",
                                          textValue: $model.hgbOCVInput, textValue2: $model.svo2OCVInput, textValue3: $model.pvo2OCVInput, numberOfField: 3, scrollIDInt: FocusedField.hgbOCVInput.hashValue)
                             .padding(.horizontal, 30)
-                            .onChange(of: model.pvo2OCVInput) { _ in
-                                model.calculateOxygenContentVenous()
+                            .onChange(of: model.hgbOCVInput) { _ in
+                                if !model.svo2OCVInput.isEmpty && !model.pvo2OCVInput.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenContentVenous()
+                                    }
+                                }
                             }
-//                            .id(FocusedField.hgbOCVInput)
+                            .onChange(of: model.svo2OCVInput) { _ in
+                                if !model.hgbOCVInput.isEmpty && !model.pvo2OCVInput.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenContentVenous()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.pvo2OCVInput) { _ in
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateOxygenContentVenous()
+                                }
+                            }
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     withAnimation {
@@ -391,7 +540,16 @@ struct CalculatorView: View {
                                          textValue: $model.coOCInput, textValue2: $model.cao2cvo2, textValue3: $model.blank, numberOfField: 2, scrollIDInt: FocusedField.coOCInput.hashValue)
                             .padding(.horizontal, 30)
                             .onChange(of: model.cao2cvo2) { _ in
-                                model.calculateOxygenConsumption()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateOxygenConsumption()
+                                }
+                            }
+                            .onChange(of: model.coOCInput) { _ in
+                                if !model.cao2cvo2.isEmpty {
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateOxygenConsumption()
+                                    }
+                                }
                             }
                             .id(FocusedField.coOCInput)
                             .onTapGesture {
@@ -415,9 +573,24 @@ struct CalculatorView: View {
                             .focused($focusedField, equals: .currentPaco2Input)
                             .focused($focusedField, equals: .sweepFlowInput)
                             .focused($focusedField, equals: .desiredPaco2Input)
-//                            .id(FocusedField.currentPaco2Input)
+                            .onChange(of: model.currentPaco2Input) { _ in
+                                if !model.sweepFlowInput.isEmpty && !model.desiredPaco2Input.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateSweepGas()
+                                    }
+                                }
+                            }
+                            .onChange(of: model.sweepFlowInput) { _ in
+                                if !model.currentPaco2Input.isEmpty && !model.desiredPaco2Input.isEmpty{
+                                    withAnimation(.linear(duration: 0.2)) {
+                                        model.calculateSweepGas()
+                                    }
+                                }
+                            }
                             .onChange(of: model.desiredPaco2Input) { _ in
-                                model.calculateSweepGas()
+                                withAnimation(.linear(duration: 0.2)) {
+                                    model.calculateSweepGas()
+                                }
                             }
                             .onTapGesture {
                                 DispatchQueue.main.async {
