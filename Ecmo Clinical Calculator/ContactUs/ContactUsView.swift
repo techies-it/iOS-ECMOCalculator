@@ -8,19 +8,6 @@
 import SwiftUI
 import WebKit
 
-//Controller
-struct WebView: UIViewRepresentable {
-    let url: URL
-    
-    func makeUIView(context: Context) -> WKWebView {
-        WKWebView()
-    }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        let request = URLRequest(url: url)
-        uiView.load(request)
-    }
-}
 
 //View
 struct ContactUsView: View {
@@ -114,7 +101,7 @@ struct ContactUsView: View {
         }
         .sheet(isPresented: $showWebView) {
                     if let url = selectedURL {
-                        WebView(url: url)
+                        WebViewWrapper(url: url)
                     }
         }
     }

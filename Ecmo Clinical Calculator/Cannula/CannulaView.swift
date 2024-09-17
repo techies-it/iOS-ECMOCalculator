@@ -500,8 +500,13 @@ struct CannulaView: View {
 
 func calTargetBloodFlow(weight: Float, option: Float) -> (String, Float) {
     // Implement the logic to calculate the flow rate based on the selected cardiac index
-    let bloodFlow = (weight * option)/1000
+    var bloodFlow = (weight * option)/1000
+    bloodFlow = (bloodFlow * 100).rounded()/100
+    print("blood flow is \(bloodFlow)")
+//    let string = String(format: "%.2f", (bloodFlow * 100)/100)
+//    print("formatted bf is \(string)")
     let result = "\(Int(option)) ml/kg : \(String(format: "%.2f", bloodFlow)) L/min"
+    print("result is \(result)")
     return  (result, bloodFlow)// Placeholder calculation
 }
 
@@ -518,11 +523,18 @@ func targetBloodFlowValue(weight: Float,height: Float,cIValues: Float) -> (Float
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsaValue = 0.007184 * weightPower * heightPower
+    let bsaValueResult = (bsaValue * 1000).rounded()/1000
+//    print("bsa value is \(bsaValueResult)")
     
-    let centerValue = cIValues * bsaValue
-    print("center value is \(centerValue)")
-    let targetBloodFlow = (centerValue * 1000)/weight
-    print("targetBloodFlow is \(targetBloodFlow)")
+    let centerValue = cIValues * bsaValueResult
+    let centerValueResult = (centerValue * 100).rounded()/100
+    let resultCO = String(format: "%.2f", centerValueResult)
+//    print("center value is \(resultCO)")
+    
+    let targetBloodFlow = ((Float(resultCO) ?? 0.0) * 1000)/weight
+//    print("targetBloodFlow is \(targetBloodFlow)")
+//    print(String(format: "%.2f", targetBloodFlow))
+    
     return (centerValue, targetBloodFlow)
 }
  
