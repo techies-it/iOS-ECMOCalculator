@@ -485,6 +485,10 @@ struct CannulaView: View {
     
             }
             .padding()
+            .onTapGesture {
+                // Dismiss the keyboard when tapping outside of the text fields
+                dismissKeyboard()
+            }
             
         }
 

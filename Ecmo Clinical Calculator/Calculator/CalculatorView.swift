@@ -790,7 +790,7 @@ func calOxygenContentArterial(hgb: Float, sao2: Float, pao2: Float) -> String{
 func calOxygenDelivery(co: Float, cao2: Float) -> String{
     let resultDo2 = (co * cao2) * 10
     let result = formatNumber(resultDo2, decimalPlaces: 0)
-    return "\(String(format: "%.0f", resultDo2)) mL/min"
+    return "\(result) mL/min"
 }
 func calOxygenContentVenous(hgb: Float, svo2: Float, pvo2: Float)-> String{
     let resultContent = (hgb * 1.34 * (svo2 / 100)) + (pvo2 * 0.003)
