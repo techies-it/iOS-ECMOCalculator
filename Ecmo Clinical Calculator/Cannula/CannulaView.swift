@@ -122,9 +122,11 @@ struct CannulaView: View {
                                                 .multilineTextAlignment(.center)
                                             ForEach(model.bloodFlowOptions, id: \.self) { option in
                                                 Button("\(option)") {
-                                                    model.selectedBloodFlow = option
-                                                    model.highlightBloodFlow(selectedValue: option)
-                                                    model.isCannulaListVisible = true
+                                                    if !model.weightInputCannula.isEmpty {
+                                                        model.selectedBloodFlow = option
+                                                        model.highlightBloodFlow(selectedValue: option)
+                                                        model.isCannulaListVisible = true
+                                                    }
                                                 }.multilineTextAlignment(.center)
                                             }
                                         }else{
@@ -134,16 +136,18 @@ struct CannulaView: View {
                                                 .multilineTextAlignment(.center)
                                             ForEach(model.CIFlowOptions, id: \.self) { option in
                                                 Button("\(String(format: "%.1f", option))") {
-                                                    model.selectedCI = Float(option)
-                                                    model.adultFrs()
-                                                    model.isCannulaListVisible = true
+                                                    if !model.heightInputCannula.isEmpty {
+                                                        model.selectedCI = Float(option)
+                                                        model.adultFrs()
+                                                        model.isCannulaListVisible = true
+                                                    }
                                                 }
                                             }
                                         }
     
                                     } label: {
                                         if !model.isHeightVisible {
-                                            Text(model.selectedBloodFlow == nil ? "Select" : "\(model.selectedBloodFlow!)")
+                                            Text(model.selectedBloodFlow == 0 ? "Select" : "\(model.selectedBloodFlow)")
                                                 .font(.system(size: 13))
                                                 .foregroundStyle(.tealBlue)
                                                 .multilineTextAlignment(.leading)
@@ -151,7 +155,7 @@ struct CannulaView: View {
                                                 .frame(alignment: .leading)
                                             
                                         }else{
-                                            Text(model.selectedCI == nil ? "Select" : "\(String(format: "%.1f", model.selectedCI!))")
+                                            Text(model.selectedCI == 0.0 ? "Select" : "\(String(format: "%.1f", model.selectedCI))")
                                                 .font(.system(size: 13))
                                                 .foregroundStyle(.tealBlue)
                                                 .padding(.trailing, 20)
@@ -172,12 +176,13 @@ struct CannulaView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 1)
-                        }.padding(.bottom, 65)
-    
+                        }.padding(.bottom, model.isBsaResultVisible ? 65 : 85)
+                        if model.isBsaResultVisible {
                             ResultText(result: model.bsaResult)
                                 .padding(.top, 10)
                                 .padding(.bottom, 10)
                                 .padding(.horizontal, 5)
+                        }
                         VStack {
                             if model.isBloodFlowVisible {
                                 // Display Blood Flow Results
