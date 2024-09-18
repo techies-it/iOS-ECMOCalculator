@@ -46,7 +46,7 @@ struct CannulaView: View {
                         HStack(spacing: 4) {
                             // Weight Input
                             VStack{
-                                Text("Weight")
+                                Text("Weight (kg)")
                                     .font(.system(size: 11))
                                     .foregroundStyle(.tealBlue)
                                     .padding(.leading, 5)
@@ -74,7 +74,7 @@ struct CannulaView: View {
                             if model.isHeightVisible {
                                 // Height Input (Visible only if weight > 15)
                                 VStack{
-                                    Text("Height")
+                                    Text("Height (cm)")
                                         .font(.system(size: 11))
                                         .foregroundStyle(.tealBlue)
                                         .padding(.leading, 5)
