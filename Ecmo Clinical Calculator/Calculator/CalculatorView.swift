@@ -26,7 +26,7 @@ struct CalculatorView: View {
             //            VStack {
             GeometryReader { geometry in
                 ScrollViewReader { proxy in
-                    ScrollView {
+                    ScrollView (showsIndicators: false){
                         Text("Clinical Calculator")
                             .font(.system(size: 22, weight: .medium))
                             .foregroundStyle(.titleLabel)
