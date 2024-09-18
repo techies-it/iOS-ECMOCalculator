@@ -8,19 +8,6 @@
 import SwiftUI
 import WebKit
 
-//Controller
-struct WebView: UIViewRepresentable {
-    let url: URL
-    
-    func makeUIView(context: Context) -> WKWebView {
-        WKWebView()
-    }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        let request = URLRequest(url: url)
-        uiView.load(request)
-    }
-}
 
 //View
 struct ContactUsView: View {
@@ -28,13 +15,17 @@ struct ContactUsView: View {
     @State private var selectedURL: URL?
     @State private var showWebView = false
 
+    private var isSmallScreen: Bool {
+        let screenHeight = UIScreen.main.bounds.size.height
+        return screenHeight <= 667 // 667 points is the screen height for iPhone SE and 4.7-inch iPhones in portrait mode
+    }
     var body: some View {
         GeometryReader { geometry in
             // Check if the device is in landscape mode
             let isLandscape = geometry.size.width > geometry.size.height
             
             Group {
-                if isLandscape {
+                if isLandscape || isSmallScreen{
                     // In landscape mode, use ScrollView
                     ScrollView {
                         content
@@ -114,7 +105,7 @@ struct ContactUsView: View {
         }
         .sheet(isPresented: $showWebView) {
                     if let url = selectedURL {
-                        WebView(url: url)
+                        WebViewWrapper(url: url)
                     }
         }
     }

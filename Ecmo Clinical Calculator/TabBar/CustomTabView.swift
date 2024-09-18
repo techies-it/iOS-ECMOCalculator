@@ -19,7 +19,7 @@ struct CustomTabView: View {
         }
         .padding()
         .background(.white)
-        .cornerRadius(25)
+        .cornerRadius(15, corners: [.topLeft, .topRight])
         .shadow(color: .tabBarShadow ,radius: 9)
     }
 }

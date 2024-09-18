@@ -24,10 +24,12 @@ struct CannulaView: View {
 //            
 //        }
 //    }
+    @State private var isBlankHeightField: Bool = false
+      @State private var blankHeightTriggered: Bool = false
     
         var body: some View {
             VStack(spacing: 0) {
-                ScrollView{
+                ScrollView(showsIndicators: false){
                     Text("Cannula Selection")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.titleLabel)
@@ -46,7 +48,7 @@ struct CannulaView: View {
                         HStack(spacing: 4) {
                             // Weight Input
                             VStack{
-                                Text("Weight")
+                                Text("Weight (kg)")
                                     .font(.system(size: 11))
                                     .foregroundStyle(.tealBlue)
                                     .padding(.leading, 5)
@@ -74,31 +76,62 @@ struct CannulaView: View {
                             if model.isHeightVisible {
                                 // Height Input (Visible only if weight > 15)
                                 VStack{
-                                    Text("Height")
+                                    Text("Height (cm)")
                                         .font(.system(size: 11))
                                         .foregroundStyle(.tealBlue)
                                         .padding(.leading, 5)
                                         .frame(width: (geometry.size.width - 10) / 3, height: 20, alignment: .leading)
-                                    TextField("Height (cm)", text: $model.heightInputCannula)
-                                        .font(.system(size: 13))
-                                        .foregroundStyle(.textFieldText)
-                                        .keyboardType(.decimalPad)
-                                        .padding(.horizontal, 15)
-                                        .frame(width: (geometry.size.width - 10) / 3, height: 50) .background(RoundedRectangle(cornerRadius: 8)
-                                            .stroke(model.heightInputCannula.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
-                                        .background(.textFieldBackground)
-    
-                                        .onChange(of: model.heightInputCannula) { newValue in
-                                            if let _ = newValue.firstIndex(of: "."),
-                                               newValue.components(separatedBy: ".").count - 1 > 1 {
-                                                model.heightInputCannula = String(newValue.dropLast())
+                                    if #available(iOS 17.0, *){
+                                        TextField("Height (cm)", text: $model.heightInputCannula)
+                                            .font(.system(size: 13))
+                                            .foregroundStyle(.textFieldText)
+                                            .keyboardType(.decimalPad)
+                                            .padding(.horizontal, 15)
+                                            .frame(width: (geometry.size.width - 10) / 3, height: 50) .background(RoundedRectangle(cornerRadius: 8)
+                                                .stroke(model.heightInputCannula.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
+                                            .phaseAnimator([0, 8, -8, 4, -4, 0], trigger: blankHeightTriggered) { content, offset in
+                                                content
+                                                    .offset(x: offset)
+                                            } animation: { _ in
+                                                    .snappy(duration: 0.13, extraBounce: 0).speed(1.5)
                                             }
-                                            model.handleHeightChange()
-                                            //calculate BSA
-    //                                        model.calculateWeightBasedBodySurfaceArea()
-                                            // calculate target blood flow - shifting call of this function to above function -
-    
-                                        }
+                                            .background(.textFieldBackground)
+                                        
+                                            .onChange(of: model.heightInputCannula) { newValue in
+                                                if let _ = newValue.firstIndex(of: "."),
+                                                   newValue.components(separatedBy: ".").count - 1 > 1 {
+                                                    model.heightInputCannula = String(newValue.dropLast())
+                                                }
+                                                model.handleHeightChange()
+                                                //calculate BSA
+                                                //                                        model.calculateWeightBasedBodySurfaceArea()
+                                                // calculate target blood flow - shifting call of this function to above function -
+                                                
+                                            }
+                                    }
+                                    else{
+                                        TextField("Height (cm)", text: $model.heightInputCannula)
+                                            .font(.system(size: 13))
+                                            .foregroundStyle(.textFieldText)
+                                            .keyboardType(.decimalPad)
+                                            .padding(.horizontal, 15)
+                                            .frame(width: (geometry.size.width - 10) / 3, height: 50) .background(RoundedRectangle(cornerRadius: 8)
+                                                .stroke(model.heightInputCannula.isEmpty ? Color.textFieldBorder : Color.tealBlue, lineWidth: 1))
+                                            .background(.textFieldBackground)
+        
+                                            .onChange(of: model.heightInputCannula) { newValue in
+                                                if let _ = newValue.firstIndex(of: "."),
+                                                   newValue.components(separatedBy: ".").count - 1 > 1 {
+                                                    model.heightInputCannula = String(newValue.dropLast())
+                                                }
+                                                model.handleHeightChange()
+                                                //calculate BSA
+        //                                        model.calculateWeightBasedBodySurfaceArea()
+                                                // calculate target blood flow - shifting call of this function to above function -
+        
+                                            }
+                                    }
+                                    
     
                                 }
     
@@ -141,6 +174,12 @@ struct CannulaView: View {
                                                         model.adultFrs()
                                                         model.isCannulaListVisible = true
                                                     }
+                                                    else{
+                                                        isBlankHeightField = true
+                                                        if isBlankHeightField {
+                                                            blankHeightTriggered.toggle()
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -149,7 +188,7 @@ struct CannulaView: View {
                                         if !model.isHeightVisible {
                                             Text(model.selectedBloodFlow == 0 ? "Select" : "\(model.selectedBloodFlow)")
                                                 .font(.system(size: 13))
-                                                .foregroundStyle(.tealBlue)
+                                                .foregroundStyle(model.selectedBloodFlow == 0 ? .textFieldText : .tealBlue)
                                                 .multilineTextAlignment(.leading)
                                                 .padding(.trailing, 60)
                                                 .frame(alignment: .leading)
@@ -157,19 +196,21 @@ struct CannulaView: View {
                                         }else{
                                             Text(model.selectedCI == 0.0 ? "Select" : "\(String(format: "%.1f", model.selectedCI))")
                                                 .font(.system(size: 13))
-                                                .foregroundStyle(.tealBlue)
+                                                .foregroundStyle(model.selectedCI == 0.0 ? .textFieldText : .tealBlue)
                                                 .padding(.trailing, 20)
                                             
                                         }
                                         Image(systemName: "chevron.down")
                                             .padding(.leading, 10)
                                             .frame(alignment: .trailing)
-                                            .foregroundStyle(.tealBlue)
+                                            .foregroundStyle(.textFieldText)
                                     }
                                     .frame(width: model.isHeightVisible ? (geometry.size.width - 10) / 3 : (geometry.size.width) / 2, height: 50)
                                     .menuStyle(.borderlessButton)
-                                    .background(RoundedRectangle(cornerRadius: 8)
-                                        .stroke(model.selectedCI == nil ? Color.gray : Color.blue, lineWidth: 1))
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(strokeColor(), lineWidth: 1)
+                                    )
     
                                 }
                             }
@@ -197,7 +238,7 @@ struct CannulaView: View {
                                 .padding(.horizontal, 10)
                                 VStack(spacing: 0){
                                     ForEach(Array(model.bloodFlowOptions.enumerated()), id: \.element) { index, option in
-                                        let resultString = calTargetBloodFlow(weight: Float(model.weightInputCannula) ?? 0.0, option: Float(option)).0
+                                        let resultString = calDoubleTargetBloodFlow(weight: Double(model.weightInputCannula) ?? 0.0, option: Double(option)).0
                                         Text("\(resultString)")
                                             .font(.caption)
                                             .foregroundColor(option == model.selectedBloodFlow ? .tealBlue : .textFieldText)
@@ -491,17 +532,60 @@ struct CannulaView: View {
             }
             
         }
-
+    
+    private func strokeColor() -> Color {
+            let _ = print(model.selectedCI, model.selectedBloodFlow)
+            if model.isHeightVisible {
+                if model.selectedCI > 0.0 {
+                    return Color.tealBlue
+                } else {
+                    return Color.textFieldBorder
+                }
+            }else{
+                if model.selectedBloodFlow > 0 {
+                    return Color.tealBlue
+                }else{
+                    return Color.textFieldBorder
+                }
+            }
+            
+            
+        }
 }
 
 #Preview {
     CannulaView()
 }
 
+//func roundHalfUp(value: Double, toDecimalPlaces decimalPlaces: Int) -> Double {
+//    let multiplier = pow(10.0, Double(decimalPlaces))
+//    let roundedValue = (value * multiplier).rounded(.up) / multiplier
+//    return roundedValue
+//}
+
+func calDoubleTargetBloodFlow(weight: Double, option: Double) -> (String, Double) {
+    // Implement the logic to calculate the flow rate based on the selected cardiac index
+    var bloodFlow = (weight * option)/1000
+    bloodFlow = (bloodFlow * 100).rounded()/100
+    print("blood flow is \(bloodFlow)")
+//    let roundedBloodFlow = roundHalfUp(value: Double(bloodFlow), toDecimalPlaces: 2)
+//    let string = String(format: "%.2f", (bloodFlow * 100)/100)
+//    print("formatted bf is \(string)")
+    let result = "\(Int(option)) ml/kg : \(String(format: "%.2f", bloodFlow)) L/min"
+    print("result is \(result)")
+    return  (result, bloodFlow)// Placeholder calculation
+}
+
 func calTargetBloodFlow(weight: Float, option: Float) -> (String, Float) {
     // Implement the logic to calculate the flow rate based on the selected cardiac index
-    let bloodFlow = (weight * option)/1000
+    var bloodFlow = (weight * option)/1000
+    bloodFlow = (bloodFlow * 100).rounded()/100
+    print("blood flow is \(bloodFlow)")
+//    let roundedBloodFlow = roundHalfUp(value: Double(bloodFlow), toDecimalPlaces: 2)
+//    let string = String(format: "%.2f", (bloodFlow * 100)/100)
+//    print("formatted bf is \(string)")
     let result = "\(Int(option)) ml/kg : \(String(format: "%.2f", bloodFlow)) L/min"
+    print("result is \(result)")
     return  (result, bloodFlow)// Placeholder calculation
 }
 
@@ -518,11 +602,18 @@ func targetBloodFlowValue(weight: Float,height: Float,cIValues: Float) -> (Float
     let weightPower = pow(weight, 0.425)
     let heightPower = pow(height, 0.725)
     let bsaValue = 0.007184 * weightPower * heightPower
+    let bsaValueResult = (bsaValue * 1000).rounded()/1000
+//    print("bsa value is \(bsaValueResult)")
     
-    let centerValue = cIValues * bsaValue
-    print("center value is \(centerValue)")
-    let targetBloodFlow = (centerValue * 1000)/weight
-    print("targetBloodFlow is \(targetBloodFlow)")
+    let centerValue = cIValues * bsaValueResult
+    let centerValueResult = (centerValue * 100).rounded()/100
+    let resultCO = String(format: "%.2f", centerValueResult)
+//    print("center value is \(resultCO)")
+    
+    let targetBloodFlow = ((Float(resultCO) ?? 0.0) * 1000)/weight
+//    print("targetBloodFlow is \(targetBloodFlow)")
+//    print(String(format: "%.2f", targetBloodFlow))
+    
     return (centerValue, targetBloodFlow)
 }
  

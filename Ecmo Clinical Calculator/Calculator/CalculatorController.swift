@@ -151,12 +151,16 @@ struct ResultList: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            ForEach(result, id: \.self) { dose in
+            ForEach(Array(result.enumerated()), id: \.element) {index, dose in
                 Text(dose)
                     .foregroundStyle(.tealBlue)
                     .font(.system(size: 13, weight: .heavy))
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                Divider()
+                if index < result.count - 1
+                {
+                    Divider()
+                }
+                
                 
             }
         }

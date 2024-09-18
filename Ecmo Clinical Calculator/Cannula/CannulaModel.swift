@@ -386,7 +386,7 @@ class CannulaModel: ObservableObject{
         //keep it in array
         resultTargetBloodFlowArray.removeAll()
         if !weightInputCannula.isEmpty{
-            if Float(weightInputCannula)! <= 15.0{   //Pediatric Entry
+            if Float(weightInputCannula) ?? 0.0 <= 15.0{   //Pediatric Entry
                 for i in 0..<bloodFlowOptions.count{
                     
                     if let weight = Float(weightInputCannula){
